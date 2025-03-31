@@ -1,0 +1,11 @@
+html {
+  scroll-behavior: smooth;
+}
+
+#root {
+  /* Largetst desktop screen size 1920px*/
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
