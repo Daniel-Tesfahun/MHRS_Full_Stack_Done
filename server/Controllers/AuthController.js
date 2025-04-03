@@ -1,29 +1,4 @@
-import AdminModel from "../models/AdminModel.js";
-import { loginAdmin, registerAdmin } from "../service/AuthServices.js";
-
-export const register = async (req, res) => {
-  // Remember to add validation for password and stuffs
-
-  const { firstName, lastName, userName, password } = req.body;
-  if (!firstName || !lastName || !userName || !password) {
-    return res
-      .status(400)
-      .json({ sucess: false, message: "All fields are required!!" });
-  }
-
-  const admin = new AdminModel({ firstName, lastName, userName, password });
-
-  try {
-    const response = await registerAdmin(admin);
-    if (response.success) {
-      return res.status(200).json(response);
-    } else {
-      return res.status(500).json(response);
-    }
-  } catch (error) {
-    return { success: false, message: "Registration faild!!!" };
-  }
-};
+import { loginAdmin } from "../service/AuthServices.js";
 
 export const login = async (req, res) => {
   const { userName, password } = req.body;
@@ -37,11 +12,15 @@ export const login = async (req, res) => {
   try {
     const response = await loginAdmin(userName, password);
     if (response.success) {
-      return res.status(200).json(response);
+      return res.status(response.statCode).json(response);
     } else {
-      return res.status(400).json(response);
+      return res.status(response.statCode).json(response);
     }
   } catch (error) {
-    return { success: false, message: "Login faild, Please try again!!" };
+    return res.status(500).json({
+      statCode: 500,
+      success: false,
+      message: "Login faild, Please try again!!",
+    });
   }
 };

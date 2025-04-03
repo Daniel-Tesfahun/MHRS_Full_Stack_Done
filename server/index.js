@@ -6,6 +6,9 @@ import createAllTables from "./utils/dbUtils.js";
 
 // Routes
 import AuthRoute from "./Routes/AuthRoute.js";
+import UserRoute from "./Routes/UserRoute.js";
+import DirectorRoute from "./Routes/DirectorRoute.js";
+import AdminRoute from "./Routes/AdminRoute.js";
 
 const app = express();
 
@@ -29,6 +32,8 @@ app.listen(PORT, async () => {
 });
 
 // Route Usage
+app.use("/api/director", DirectorRoute);
+app.use("/api/admin", AdminRoute);
 app.use("/api/authAdmin", AuthRoute);
-app.use("/api/user", AuthRoute);
+app.use("/api/user", UserRoute);
 app.use("/", async (req, res) => res.status(404).send("404, Page not found!!"));
