@@ -16,8 +16,8 @@ export const approveReservation = async (rId, approvedBy) => {
     }
     // Update the reservation status to 'Approved'
     const [result] = await pool.query(
-      `UPDATE reservations SET approvedStatus = 'Approved' WHERE rId = ?`,
-      [rId]
+      `UPDATE reservations SET approvedStatus = 'Approved', aId = ? WHERE rId = ?`,
+      [approvedBy, rId]
     );
 
     if (result.affectedRows === 0) {
@@ -30,32 +30,22 @@ export const approveReservation = async (rId, approvedBy) => {
 
     // Fetch the updated reservation details
     const [updatedReservation] = await pool.query(
-      `SELECT * FROM reservations WHERE rId = ?`,
+      `SELECT 
+        hallDetails.hallName,
+        reservations.reserverOffice,
+        reservations.reservationDate,
+        reservations.timeOfDay
+        FROM 
+        reservations
+        JOIN 
+        hallDetails ON reservations.hId = hallDetails.hId
+        WHERE 
+        reservations.rId = ?;`,
       [rId]
     );
 
     const data = updatedReservation[0];
-    const {
-      hallName,
-      reserverOffice,
-      reserverEmail,
-      timeOfDay,
-      reservationDate,
-    } = data;
-
-    // Insert into hallInfo table
-    await pool.query(
-      `INSERT INTO hallInfo (hallName, approvedBy, reservedBy, reservationId, reservationDate, timeOfDay, reserverEmail,created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-      [
-        hallName,
-        approvedBy,
-        reserverOffice,
-        rId,
-        reservationDate,
-        timeOfDay,
-        reserverEmail,
-      ]
-    );
+    const { hallName, reserverOffice, reservationDate, timeOfDay } = data;
 
     return {
       success: true,
@@ -72,12 +62,45 @@ export const approveReservation = async (rId, approvedBy) => {
   }
 };
 
-export const rejectReservation = async (rId) => {
+// Insert into hallInfo table
+// await pool.query(
+//   `INSERT INTO hallInfo (hallName, approvedBy, reservedBy, reservationId, reservationDate, timeOfDay, reserverEmail,created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+//   [
+//     hallName,
+//     approvedBy,
+//     reserverOffice,
+//     rId,
+//     reservationDate,
+//     timeOfDay,
+//     reserverEmail,
+//   ]
+// );
+
+// return {
+//   success: true,
+//   statCode: 200,
+//   message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${timeOfDay} approved successfully.`,
+// };
+
+export const rejectReservation = async (rId, rejectedBy) => {
   try {
+    // Check if the reservation is already rejected
+    const [existingReservation] = await pool.query(
+      `SELECT * FROM reservations WHERE rId = ? AND approvedStatus = 'Rejected'`,
+      [rId]
+    );
+    if (existingReservation.length > 0) {
+      return {
+        success: false,
+        statCode: 400,
+        message: "Reservation is already rejected.",
+      };
+    }
+
     // Update the reservation status to 'Rejected'
     const [result] = await pool.query(
-      `UPDATE reservations SET approvedStatus = 'Rejected' WHERE rId = ?`,
-      [rId]
+      `UPDATE reservations SET approvedStatus = 'Rejected', aId = ? WHERE rId = ?`,
+      [rejectedBy, rId]
     );
 
     if (result.affectedRows === 0) {
@@ -90,12 +113,22 @@ export const rejectReservation = async (rId) => {
 
     // Fetch the updated reservation details
     const [updatedReservation] = await pool.query(
-      `SELECT * FROM reservations WHERE rId = ?`,
+      `SELECT
+        hallDetails.hallName,
+        reservations.reserverOffice,
+        reservations.reservationDate,
+        reservations.timeOfDay
+        FROM
+        reservations
+        JOIN
+        hallDetails ON reservations.hId = hallDetails.hId
+        WHERE
+        reservations.rId = ?;`,
       [rId]
     );
 
     const data = updatedReservation[0];
-    const { hallName, reserverOffice, timeOfDay, reservationDate } = data;
+    const { hallName, reserverOffice, reservationDate, timeOfDay } = data;
 
     return {
       success: true,
@@ -131,9 +164,27 @@ export const getAllReservations = async () => {
   }
 };
 
+// to be edited
 export const getAllHallInfo = async () => {
   try {
-    const [hallInfo] = await pool.query(`SELECT * FROM hallInfo`);
+    const [hallInfo] = await pool.query(`
+            SELECT 
+                hallDetails.hallName,
+                CONCAT(admins.firstName, ' ', admins.lastName) AS approvedBy,
+                reservations.reserverOffice,
+                reservations.rId AS reservationId,
+                reservations.reservationDate,
+                reservations.timeOfDay,
+                reservations.reserverEmail
+            FROM 
+                reservations
+            JOIN 
+                hallDetails ON reservations.hId = hallDetails.hId
+            LEFT JOIN 
+                admins ON reservations.aId = admins.aId
+            WHERE 
+                reservations.approvedStatus = 'Approved';
+    `);
     return {
       success: true,
       statCode: 200,

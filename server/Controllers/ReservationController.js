@@ -3,23 +3,23 @@ import { bookReservationService } from "../service/reservationService.js";
 
 export const bookReservation = async (req, res) => {
   const {
-    hallName,
     reserverOffice,
     reserverName,
     reserverPhone,
     reserverEmail,
     timeOfDay,
     reservationDate,
+    hId,
   } = req.body;
 
   if (
-    !hallName ||
     !reserverOffice ||
     !reserverName ||
     !reserverPhone ||
     !reserverEmail ||
     !timeOfDay ||
-    !reservationDate
+    !reservationDate ||
+    !hId
   ) {
     return res
       .status(400)
@@ -27,13 +27,13 @@ export const bookReservation = async (req, res) => {
   }
 
   const reservationDetails = new ReservationModel({
-    hallName,
     reserverOffice,
     reserverName,
     reserverPhone,
     reserverEmail,
     timeOfDay,
     reservationDate,
+    hId,
   });
 
   try {

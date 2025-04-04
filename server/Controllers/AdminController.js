@@ -9,7 +9,7 @@ import {
 export const reservationApproval = async (req, res) => {
   try {
     const { rId } = req.params;
-    const approvedBy = req.admin.userName; // Assuming you have user info in req.user
+    const approvedBy = req.admin.id;
 
     // Call the service to approve the reservation
     const result = await approveReservation(rId, approvedBy);
@@ -25,9 +25,10 @@ export const reservationApproval = async (req, res) => {
 export const reservationRejection = async (req, res) => {
   try {
     const { rId } = req.params;
+    const rejectedBy = req.admin.id;
 
     // Call the service to reject the reservation
-    const result = await rejectReservation(rId);
+    const result = await rejectReservation(rId, rejectedBy);
 
     return res.status(result.statCode).json(result);
   } catch (error) {

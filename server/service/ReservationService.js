@@ -2,20 +2,20 @@ import { pool } from "../config/db.js";
 
 export const bookReservationService = async (reservationDetails) => {
   const {
-    hallName,
     reserverOffice,
     reserverName,
     reserverPhone,
     reserverEmail,
     timeOfDay,
     reservationDate,
+    hId,
   } = reservationDetails;
 
   try {
     // Check if the hall is already booked for the same date and time slot
     const [existingReservations] = await pool.query(
-      `SELECT * FROM reservations WHERE hallName = ? AND reservationDate = ? AND timeOfDay = ?`,
-      [hallName, reservationDate, timeOfDay]
+      `SELECT * FROM reservations WHERE hId = ? AND reservationDate = ? AND timeOfDay = ?`,
+      [hId, reservationDate, timeOfDay]
     );
 
     if (existingReservations.length > 0) {
@@ -28,15 +28,15 @@ export const bookReservationService = async (reservationDetails) => {
 
     // Insert reservation
     await pool.query(
-      `INSERT INTO reservations (hallName, reserverOffice, reserverName, reserverPhone, reserverEmail, timeOfDay, reservationDate, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+      `INSERT INTO reservations (reserverOffice, reserverName, reserverPhone, reserverEmail, timeOfDay, reservationDate, hId, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
       [
-        hallName,
         reserverOffice,
         reserverName,
         reserverPhone,
         reserverEmail,
         timeOfDay,
         reservationDate,
+        hId,
       ]
     );
     return {
@@ -49,7 +49,7 @@ export const bookReservationService = async (reservationDetails) => {
     return {
       success: false,
       statCode: 500,
-      message: "Internal server error!!",
+      message: "Internal server error from DB!!",
       error: error,
     };
   }
