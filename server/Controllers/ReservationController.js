@@ -1,5 +1,5 @@
 import ReservationModel from "../models/ReservationModel.js";
-import { bookReservationService } from "../service/reservationService.js";
+import { bookReservationService } from "../service/ReservationService.js";
 
 export const bookReservation = async (req, res) => {
   const {

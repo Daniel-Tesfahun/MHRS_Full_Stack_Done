@@ -7,18 +7,28 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { reserveHall } from "../../api/UserRequest";
 
 function ReservationPage() {
   let date = Date();
+  const defaultHallId = 1; // Default hall ID
   // const [dateValue, setDateValue] = useState(dayjs(date));
 
-  const [data, setData] = useState({
-    companyName: "",
+  const initializeReservationData = {
+    reserverOffice: "",
     reserverName: "",
     reserverPhone: "",
+    reserverEmail: "",
     reservationDate: null, // Starts as null
     timeOfDay: "",
-  });
+    hId: defaultHallId,
+  };
+  const [data, setData] = useState(initializeReservationData);
+
+  // reset form data
+  const resetForm = () => {
+    setData(initializeReservationData);
+  };
 
   const companies = [
     "Company A",
@@ -48,24 +58,57 @@ function ReservationPage() {
     "Company Y",
   ];
 
+  const halls = {
+    "Hall A": 1,
+    "Hall B": 2,
+  };
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
+    if (e.target.name === "hId") {
+      setData((prevData) => ({ ...prevData, hId: parseInt(e.target.value) }));
+    } else {
+      const { name, value } = e.target;
+      setData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleDateChange = (newDate) => {
-    setData((prevData) => ({ ...prevData, reservationDate: newDate }));
+    const today = dayjs(); // Get today's date
+
+    if (dayjs(newDate).isValid() && dayjs(newDate).isAfter(today, "day")) {
+      setData((prevData) => ({
+        ...prevData,
+        reservationDate: dayjs(newDate), // Store as a dayjs object
+      }));
+    } else {
+      alert("Please select a valid date that is today or in the future.");
+      setData((prevData) => ({
+        ...prevData,
+        reservationDate: today, // Reset to today's date if invalid
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // alert(dateValue);
-    alert(
-      `You reserved a hall for ${data.reservationDate.format("YYYY-MM-DD")} ${
-        data.timeOfDay
-      }`
-    ); // Human readable way
-    console.log(data);
+
+    const formattedData = {
+      ...data,
+      reservationDate: data.reservationDate
+        ? data.reservationDate.format("YYYY-MM-DD")
+        : null,
+    };
+
+    let resMessage = "";
+
+    try {
+      const response = await reserveHall(formattedData);
+      resMessage = response.data.message;
+    } catch (error) {
+      // console.error("Error during reservation:", error);
+      resMessage = error.response.data.message;
+    }
+    alert(resMessage);
   };
 
   return (
@@ -78,16 +121,16 @@ function ReservationPage() {
           </header>
           <div className="res-inputs">
             <div className="res-company-name-container">
-              <label>Select a Company:</label>
+              <label>Select an Office:</label>
               <select
                 className="res-company-select"
-                name="companyName"
-                value={data.companyName}
+                name="reserverOffice"
+                value={data.reserverOffice}
                 onChange={handleChange}
                 required
               >
                 <option value="" disabled>
-                  Select a company
+                  Select an office
                 </option>
                 {companies.map((company, index) => (
                   <option key={index} value={company}>
@@ -120,6 +163,18 @@ function ReservationPage() {
                 required
               />
             </div>
+            <div className="res-name-container">
+              <label>Reserver Email</label>
+              <input
+                type="email"
+                className="res-name-input"
+                name="reserverEmail"
+                value={data.reserverEmail}
+                onChange={handleChange}
+                placeholder="Ex: abelh@gmail.com"
+                required
+              />
+            </div>
             <div className="res-company-name-container">
               <label>Select Time:</label>
               <select
@@ -141,10 +196,10 @@ function ReservationPage() {
               <label>Date:</label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  value={data.reservationDate}
+                  value={data.reservationDate || null}
                   onChange={handleDateChange}
                   minDate={dayjs(date)}
-                  renderInput={(params) => (
+                  textField={(params) => (
                     <input
                       {...params}
                       name="reservationDate"
@@ -154,6 +209,25 @@ function ReservationPage() {
                   )}
                 />
               </LocalizationProvider>
+            </div>
+            <div className="res-company-name-container">
+              <label>Select a Hall:</label>
+              <select
+                className="res-company-select"
+                name="hId"
+                value={data.hId} // Default
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled>
+                  Select a Hall
+                </option>
+                {Object.entries(halls).map(([hallName, hallId]) => (
+                  <option key={hallId} value={hallId}>
+                    {hallName}
+                  </option>
+                ))}
+              </select>
             </div>
             <button type="submit" className="res-btn">
               BOOK A MEETING HALL

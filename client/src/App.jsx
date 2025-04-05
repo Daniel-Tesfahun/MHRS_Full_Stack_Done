@@ -6,12 +6,14 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import ReservationPage from "./pages/ReservationPage/ReservationPage";
 import { Navigate } from "react-router-dom";
+import DashBoard from "./pages/DashBoard/DashBoard";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
+        <Route path="/dashboard" element={<DashBoard />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegistrationPage />}></Route>
         <Route path="/reservation" element={<ReservationPage />}></Route>
