@@ -12,7 +12,10 @@ function NavBar() {
   return (
     <nav className="navbar">
       <div className="logo">Meeting Hall Reservation</div>
-      <button className="hamburger" onClick={toggleMenu}>
+      <button
+        className={`hamburger ${menuOpen ? "ham-active" : ""}`}
+        onClick={toggleMenu}
+      >
         ☰
       </button>
       <ul className={`nav-links ${menuOpen ? "active" : ""}`}>

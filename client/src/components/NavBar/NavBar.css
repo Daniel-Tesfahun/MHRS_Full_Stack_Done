@@ -1,4 +1,3 @@
-/* Keep your original CSS */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -76,8 +75,6 @@
 
 /* Navbar Styling for Small Screens */
 @media (max-width: 768px) {
-
-    /* Make navbar content align horizontally */
     .navbar {
         display: flex;
         flex-direction: row;
@@ -101,6 +98,10 @@
         border: none;
         color: #ffffffef;
         cursor: pointer;
+    }
+
+    .ham-active {
+        color: #ff7200ef;
     }
 
     .nav-links {

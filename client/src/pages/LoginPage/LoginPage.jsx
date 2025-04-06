@@ -36,7 +36,7 @@ function LoginPage() {
                 name="userName"
                 value={data.userName}
                 onChange={handleChange}
-                placeholder="Example: ab123"
+                placeholder="Username"
                 required
               />
             </div>
@@ -48,12 +48,12 @@ function LoginPage() {
                 name="password"
                 value={data.password}
                 onChange={handleChange}
-                placeholder="Example: #A2b3c"
+                placeholder="Password"
                 required
               />
             </div>
             <button type="submit" className="login-btn">
-              BOOK A MEETING HALL
+              Login
             </button>
           </div>
         </form>

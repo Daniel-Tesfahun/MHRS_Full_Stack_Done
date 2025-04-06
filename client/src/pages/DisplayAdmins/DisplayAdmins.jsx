@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import "./HomePage.css";
+import "./DisplayAdmins.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { Link } from "react-router-dom";
 
-function HomePage() {
+const DisplayAdmins = () => {
   const initializeHallInfo = [
     {
       hallName: "Hall A",
@@ -101,71 +102,67 @@ function HomePage() {
     (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
   );
 
-  // for the useEffect hook, we can use the sorted data to set the state
-  // setApprovedRes((prev) =>
-  //   [...prev].sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate))
-  // );
+  const handleDelete = (reservationId) => {
+    const updatedRes = approvedRes.filter(
+      (res) => res.reservationId !== reservationId
+    );
+    setApprovedRes(updatedRes); // Update state to remove the deleted row
+  };
 
   const role = "Director";
 
   return (
-    <div className="home-container">
+    <>
       <NavBar />
-      <header className="header">
-        <h1>Welcome to the Meeting Hall Reservation System</h1>
-        <p>Plan your events and reserve halls seamlessly.</p>
-      </header>
-      {/* Section 1 */}
-      <section className="section section1">
-        <h1>Approved Reservations</h1>
-        <div className="UsersList">
-          <table>
-            <thead>
-              <tr>
-                {(role === "Admin" || role === "Director") && (
-                  <th>Reservation Id</th>
-                )}
-                <th>Reserver Office</th>
-                <th>Hall Name</th>
-                <th>Reservation Date</th>
-                <th>Time Of Day</th>
-                <th>Reserver Email</th>
-                <th>Approved By</th>
+      <div className="UsersList">
+        <h1 className="display-admins-header">Display Admins</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Reservation Id</th>
+              <th>Reserver Office</th>
+              <th>Hall Name</th>
+              <th>Reservation Date</th>
+              <th>Time Of Day</th>
+              <th>Reserver Email</th>
+              <th>Approved By</th>
+              <th>Actions</th> {/* New column for action buttons */}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedHallInfo.map((apprRes, index) => (
+              <tr key={index}>
+                <td>{apprRes.reservationId}</td>
+                <td>{apprRes.reserverOffice}</td>
+                <td>{apprRes.hallName}</td>
+                <td>
+                  {new Date(apprRes.reservationDate).toLocaleDateString()}
+                </td>
+                <td>{apprRes.timeOfDay}</td>
+                <td>{apprRes.reserverEmail}</td>
+                <td>{apprRes.approvedBy}</td>
+                <td>
+                  {/* Action Buttons */}
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(apprRes.reservationId)}
+                  >
+                    Delete
+                  </button>
+                  <Link
+                    to={`/edit/${apprRes.reservationId}`}
+                    className="edit-button"
+                  >
+                    Edit
+                  </Link>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {sortedHallInfo.map((apprRes, index) => (
-                <tr key={index}>
-                  {(role === "Admin" || role === "Director") && (
-                    <td data-label="Reservation Id">{apprRes.reservationId}</td>
-                  )}
-                  <td data-label="Reserver Office">{apprRes.reserverOffice}</td>
-                  <td data-label="Hall Name">{apprRes.hallName}</td>
-                  <td data-label="Reservation Date">
-                    {apprRes.reservationDate}
-                  </td>
-                  <td data-label="Time Of Day">{apprRes.timeOfDay}</td>
-                  <td data-label="Reserver Email">{apprRes.reserverEmail}</td>
-                  <td data-label="Approved By">{apprRes.approvedBy}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-      {/* Section 2
-      <section className="section section2">
-        <h1>Section 2</h1>
-      </section>
-
-      {/* Section 3 */}
-      {/*
-      <section className="section section3">
-        <h1>Section 3</h1>
-      </section>{" "}
-      */}
-    </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
-}
+};
 
-export default HomePage;
+export default DisplayAdmins;
