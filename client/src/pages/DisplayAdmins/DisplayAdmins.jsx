@@ -129,13 +129,16 @@ const DisplayAdmins = () => {
                 </td>
                 <td>
                   {/* Action Buttons */}
-                  <button
+                  <div
                     className="delete-button"
                     onClick={() => handleDelete(apprRes.aId)}
                   >
                     Delete
-                  </button>
-                  <Link to={`/edit/${apprRes.aId}`} className="edit-button">
+                  </div>
+                  <Link
+                    to={`/updateAdmin/${apprRes.aId}`}
+                    className="edit-button"
+                  >
                     Edit
                   </Link>
                 </td>

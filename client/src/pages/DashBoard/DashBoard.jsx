@@ -4,18 +4,29 @@ import "./DashBoard.css";
 import NavBar from "../../components/NavBar/NavBar";
 
 function DashBoard() {
+  const adminInfo = {
+    aId: 1,
+    firstName: "Daniel",
+    lastName: "Tesfahun",
+    userName: "dan1",
+    role: "Director",
+    updated: "2025-04-04T21:00:00.000Z",
+  };
+
   return (
     <div className="dashboard-container">
       <NavBar />
       <nav className="dashboard-nav">
         <div className="profile-card profile-shadow">
           <span>Name</span>
-          <div className="profile-details">Daniel Tesfahun</div>
+          <div className="profile-details">
+            {adminInfo?.firstName} {adminInfo?.lastName}
+          </div>
 
           <span>Role</span>
-          <div className="profile-details">Admin</div>
+          <div className="profile-details">{adminInfo?.role}</div>
         </div>
-        <Link to="/updateAdmin" className="dd">
+        <Link to={`/updateAdmin/${adminInfo.aId}`} className="dd">
           Edit
         </Link>
         <div className="hor-line"></div>
@@ -24,13 +35,13 @@ function DashBoard() {
             <Link to="/">Overview</Link>
           </li>
           <li>
-            <Link to="/">Approve Reservations</Link>
+            <Link to="/approveReservation">Approve Reservations</Link>
           </li>
           <li>
             <Link to="/addHall">Add New Hall</Link>
           </li>
           <li>
-            <Link to="/updateHall">Display Hall</Link>
+            <Link to="/displayHalls">Display Hall</Link>
           </li>
           <li>
             <Link to="/register">Add New Admin</Link>

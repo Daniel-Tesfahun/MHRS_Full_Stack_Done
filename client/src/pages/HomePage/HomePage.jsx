@@ -106,7 +106,14 @@ function HomePage() {
   //   [...prev].sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate))
   // );
 
-  const role = "Director";
+  const adminInfo = {
+    aId: 1,
+    firstName: "Daniel",
+    lastName: "Tesfahun",
+    userName: "dan1",
+    role: "Director",
+    updated: "2025-04-04T21:00:00.000Z",
+  };
 
   return (
     <div className="home-container">
@@ -117,14 +124,14 @@ function HomePage() {
       </header>
       {/* Section 1 */}
       <section className="section section1">
-        <h1>Approved Reservations</h1>
+        <h1>Check Your Reservations Status Here</h1>
         <div className="UsersList">
+          <h1 style={{ color: "#374151" }}>Approved Reservations</h1>
           <table>
             <thead>
               <tr>
-                {(role === "Admin" || role === "Director") && (
-                  <th>Reservation Id</th>
-                )}
+                {(adminInfo?.role === "Admin" ||
+                  adminInfo?.role === "Director") && <th>Reservation Id</th>}
                 <th>Reserver Office</th>
                 <th>Hall Name</th>
                 <th>Reservation Date</th>
@@ -136,13 +143,14 @@ function HomePage() {
             <tbody>
               {sortedHallInfo.map((apprRes, index) => (
                 <tr key={index}>
-                  {(role === "Admin" || role === "Director") && (
+                  {(adminInfo?.role === "Admin" ||
+                    adminInfo?.role === "Director") && (
                     <td data-label="Reservation Id">{apprRes.reservationId}</td>
                   )}
                   <td data-label="Reserver Office">{apprRes.reserverOffice}</td>
                   <td data-label="Hall Name">{apprRes.hallName}</td>
                   <td data-label="Reservation Date">
-                    {apprRes.reservationDate}
+                    {new Date(apprRes.reservationDate).toLocaleDateString()}
                   </td>
                   <td data-label="Time Of Day">{apprRes.timeOfDay}</td>
                   <td data-label="Reserver Email">{apprRes.reserverEmail}</td>
