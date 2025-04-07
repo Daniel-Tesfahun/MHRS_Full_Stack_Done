@@ -10,3 +10,6 @@ export const getAdminById = (aId) =>
 
 export const addNewHall = (formData) =>
   apiClient.post("/api/admin/addHallDetails", formData);
+
+export const getAllReservations = () =>
+  apiClient.get("/api/admin/allReservations");

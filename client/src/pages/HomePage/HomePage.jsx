@@ -150,7 +150,14 @@ function HomePage() {
                   <td data-label="Reserver Office">{apprRes.reserverOffice}</td>
                   <td data-label="Hall Name">{apprRes.hallName}</td>
                   <td data-label="Reservation Date">
-                    {new Date(apprRes.reservationDate).toLocaleDateString()}
+                    {new Date(apprRes.reservationDate).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
                   </td>
                   <td data-label="Time Of Day">{apprRes.timeOfDay}</td>
                   <td data-label="Reserver Email">{apprRes.reserverEmail}</td>

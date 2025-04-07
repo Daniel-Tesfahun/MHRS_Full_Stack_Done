@@ -104,6 +104,9 @@ function ReservationPage() {
     try {
       const response = await reserveHall(formattedData);
       resMessage = response.data.message;
+      if (response.data.success) {
+        resetForm();
+      }
     } catch (error) {
       // console.error("Error during reservation:", error);
       resMessage = error.response.data.message;
@@ -199,6 +202,7 @@ function ReservationPage() {
                   value={data.reservationDate || null}
                   onChange={handleDateChange}
                   minDate={dayjs(date)}
+                  format="DD/MM/YYYY"
                   textField={(params) => (
                     <input
                       {...params}

@@ -113,7 +113,7 @@ const DisplayAdmins = () => {
               <th>User Name</th>
               <th>Role</th>
               <th>Updated At</th>
-              <th>Actions</th> {/* New column for action buttons */}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>

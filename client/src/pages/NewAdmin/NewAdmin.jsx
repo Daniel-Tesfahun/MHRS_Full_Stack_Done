@@ -26,8 +26,10 @@ function NewAdmin() {
         msg = error.response.data.message;
       }
       alert(msg);
-      setData(initializeLoginData);
-      setConfirmPassword("");
+      if (response.data.success) {
+        setData(initializeLoginData);
+        setConfirmPassword("");
+      }
     } else {
       alert("Password and Confirm Password do not match!");
     }

@@ -115,3 +115,7 @@
     justify-content: flex-start;
     gap: 0.5rem;
 }
+
+.no-reservation-msg {
+    text-align: center;
+}

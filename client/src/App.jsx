@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
@@ -13,17 +13,28 @@ import UpdateHall from "./pages/UpdateHall/UpdateHall";
 import DisplayAdmins from "./pages/DisplayAdmins/DisplayAdmins";
 import DisplayHalls from "./pages/DisplayHalls/DisplayHalls";
 import ApproveReservations from "./pages/ApproveReservations/ApproveReservations";
+import { checkRole } from "./assets/CheckRole";
 
 function App() {
-  const token = localStorage.getItem("authToken");
+  const [isDirector, setIsDirector] = useState(false);
+  useEffect(() => {
+    const check = checkRole();
+    if (check === "Director") {
+      setIsDirector(true);
+    }
+    // console.log("Role in route: ", check, " and ", isDirector);
+  }, []);
   return (
     <>
       <Routes>
+        {/* Public routes  */}
         <Route path="/" element={<HomePage />}></Route>
-        <Route path="/dashboard/:aId" element={<DashBoard />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/register" element={<NewAdmin />}></Route>
         <Route path="/reservation" element={<ReservationPage />}></Route>
+
+        {/* Restricted routes */}
+        <Route path="/dashboard/:aId" element={<DashBoard />}></Route>
+        <Route path="/register" element={<NewAdmin />}></Route>
         <Route path="/updateAdmin/:aId" element={<UpdateAdmin />}></Route>
         <Route path="/addHall" element={<NewHall />}></Route>
         <Route path="/updateHall/:hId" element={<UpdateHall />}></Route>

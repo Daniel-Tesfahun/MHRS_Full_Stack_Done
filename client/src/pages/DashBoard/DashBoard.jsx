@@ -3,13 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "./DashBoard.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { getAdminById } from "../../api/AdminRequest";
-import { checkRole } from "../../assets/CheckRole";
 
 function DashBoard() {
   const [admin, setAdmin] = useState(null);
   const [isDirector, setIsDirector] = useState(false);
   const { aId } = useParams();
-  console.log(aId);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +25,7 @@ function DashBoard() {
 
     fetchAdminData();
   }, [aId]);
-  console.log("The feched data!!", admin);
+  // console.log("The feched data!!", admin);
 
   const handleLogout = () => {
     localStorage.removeItem("adminId");
