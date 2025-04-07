@@ -55,6 +55,7 @@
 }
 
 .dashboard-nav li.logout {
+    cursor: pointer;
     margin-top: auto;
     background-color: #7a1e1e;
 }
@@ -63,7 +64,8 @@
     background-color: #741818;
 }
 
-.dashboard-nav li a {
+.dashboard-nav li a,
+.logout-btn {
     display: block;
     width: 100%;
     height: 100%;

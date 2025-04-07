@@ -2,7 +2,6 @@ import { loginAdmin } from "../service/AuthServices.js";
 
 export const login = async (req, res) => {
   const { userName, password } = req.body;
-
   if (!userName || !password) {
     return res
       .status(400)

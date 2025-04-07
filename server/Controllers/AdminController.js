@@ -1,6 +1,7 @@
 import {
   approveReservation,
   deleteReservation,
+  getAdminById,
   getAllHallInfo,
   getAllReservations,
   rejectReservation,
@@ -67,6 +68,18 @@ export const delete_Reservation = async (req, res) => {
     // Call the service to delete the reservation
     const result = await deleteReservation(rId);
 
+    return res.status(result.statCode).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error from the API.",
+    });
+  }
+};
+
+export const get_AdminById = async (req, res) => {
+  try {
+    const { aId } = req.params;
+    const result = await getAdminById(aId);
     return res.status(result.statCode).json(result);
   } catch (error) {
     return res.status(500).json({

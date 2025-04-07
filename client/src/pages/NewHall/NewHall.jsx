@@ -1,20 +1,31 @@
 import React, { useState } from "react";
 import "./NewHall.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { addNewHall } from "../../api/AdminRequest";
 
 function NewHall() {
-  const initializeLoginData = {
+  const initializeNewHallData = {
     hallName: "",
     capacity: 0,
     location: "",
   };
 
-  const [data, setData] = useState(initializeLoginData);
+  const [msgState, setMsgState] = useState("");
+  const [data, setData] = useState(initializeNewHallData);
+  let resMsg = "";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", data);
-    setData(initializeLoginData);
+
+    try {
+      const response = await addNewHall(data);
+      resMsg = response.data.message;
+    } catch (error) {
+      resMsg = error.response.data.message;
+    }
+    setMsgState(resMsg);
+    alert(resMsg);
+    setData(initializeNewHallData);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;

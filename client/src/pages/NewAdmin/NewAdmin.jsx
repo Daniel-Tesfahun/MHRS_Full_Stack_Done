@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./NewAdmin.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { addNewAdmin } from "../../api/DirectorRequest";
 
 function NewAdmin() {
   const initializeLoginData = {
@@ -13,11 +14,18 @@ function NewAdmin() {
 
   const [data, setData] = useState(initializeLoginData);
   const [confirmPassword, setConfirmPassword] = useState("");
+  let msg = "";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (data.password === confirmPassword) {
-      console.log("Form submitted", data);
+      try {
+        const response = await addNewAdmin(data);
+        msg = response.data.message;
+      } catch (error) {
+        msg = error.response.data.message;
+      }
+      alert(msg);
       setData(initializeLoginData);
       setConfirmPassword("");
     } else {

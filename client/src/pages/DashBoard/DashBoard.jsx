@@ -1,16 +1,39 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./DashBoard.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { getAdminById } from "../../api/AdminRequest";
+import { checkRole } from "../../assets/CheckRole";
 
 function DashBoard() {
-  const adminInfo = {
-    aId: 1,
-    firstName: "Daniel",
-    lastName: "Tesfahun",
-    userName: "dan1",
-    role: "Director",
-    updated: "2025-04-04T21:00:00.000Z",
+  const [admin, setAdmin] = useState(null);
+  const [isDirector, setIsDirector] = useState(false);
+  const { aId } = useParams();
+  console.log(aId);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const response = await getAdminById(aId);
+        setAdmin(response.data);
+        if (response.data.data.role === "Director") {
+          setIsDirector(true);
+        }
+      } catch (err) {
+        console.error("Failed to fetch admin data:", err);
+      }
+    };
+
+    fetchAdminData();
+  }, [aId]);
+  console.log("The feched data!!", admin);
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminId");
+    localStorage.removeItem("authToken");
+    setIsDirector(false);
+    navigate("/login");
   };
 
   return (
@@ -20,13 +43,13 @@ function DashBoard() {
         <div className="profile-card profile-shadow">
           <span>Name</span>
           <div className="profile-details">
-            {adminInfo?.firstName} {adminInfo?.lastName}
+            {admin && admin.data.firstName} {admin && admin.data.lastName}
           </div>
 
           <span>Role</span>
-          <div className="profile-details">{adminInfo?.role}</div>
+          <div className="profile-details">{admin && admin.data.role}</div>
         </div>
-        <Link to={`/updateAdmin/${adminInfo.aId}`} className="dd">
+        <Link to={`/updateAdmin/${admin && admin.data.aId}`} className="dd">
           Edit
         </Link>
         <div className="hor-line"></div>
@@ -43,14 +66,20 @@ function DashBoard() {
           <li>
             <Link to="/displayHalls">Display Hall</Link>
           </li>
-          <li>
-            <Link to="/register">Add New Admin</Link>
-          </li>
-          <li>
-            <Link to="/displayAdmins">Display Admins</Link>
-          </li>
+          {isDirector && (
+            <li>
+              <Link to="/register">Add New Admin</Link>
+            </li>
+          )}
+          {isDirector && (
+            <li>
+              <Link to="/displayAdmins">Display Admins</Link>
+            </li>
+          )}
           <li className="logout">
-            <Link to="/">Logout</Link>
+            <div onClick={handleLogout} className="logout-btn">
+              Logout
+            </div>
           </li>
         </ul>
       </nav>

@@ -9,15 +9,7 @@ function NavBar() {
     setMenuOpen(!menuOpen);
   };
 
-  const adminInfo = {
-    aId: 1,
-    firstName: "Daniel",
-    lastName: "Tesfahun",
-    userName: "dan1",
-    password: "$2b$10$DUemMrfNbnCxgMk3J6hdLe8YzG.EbXo7X3iJaTnmFl3LsXXDbP.FG",
-    role: "Director",
-    updated: "2025-04-04T21:00:00.000Z",
-  };
+  const adminId = localStorage.getItem("adminId");
 
   return (
     <nav className="navbar">
@@ -40,21 +32,20 @@ function NavBar() {
           </NavLink>
         </li>
 
-        {adminInfo?.aId && (
+        {adminId && (
           <li>
-            <NavLink
-              to={`/dashboard/${adminInfo?.aId}`}
-              activeClassName="active"
-            >
+            <NavLink to={`/dashboard/${adminId}`} activeClassName="active">
               Dashboard
             </NavLink>
           </li>
         )}
-        <li>
-          <NavLink to="/login" activeClassName="active">
-            Login
-          </NavLink>
-        </li>
+        {!adminId && (
+          <li>
+            <NavLink to="/login" activeClassName="active">
+              Login
+            </NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );

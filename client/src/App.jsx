@@ -15,6 +15,7 @@ import DisplayHalls from "./pages/DisplayHalls/DisplayHalls";
 import ApproveReservations from "./pages/ApproveReservations/ApproveReservations";
 
 function App() {
+  const token = localStorage.getItem("authToken");
   return (
     <>
       <Routes>

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   delete_Reservation,
+  get_AdminById,
   get_AllReservations,
   get_ApprovedReservations,
   reservationApproval,
@@ -31,5 +32,6 @@ router.put("/reject/:rId", verifyAdmin, reservationRejection);
 router.get("/allReservations", verifyAdmin, get_AllReservations);
 router.get("/allHallInfo", verifyAdmin, get_ApprovedReservations);
 router.delete("/deleteReservation/:rId", verifyAdmin, delete_Reservation);
+router.get("/getAdmin/:aId", verifyAdmin, get_AdminById);
 
 export default router;

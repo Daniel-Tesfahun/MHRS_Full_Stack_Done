@@ -39,6 +39,7 @@ export const loginAdmin = async (userName, password) => {
 
     return {
       statCode: 200,
+      aId: admin.aId,
       success: true,
       message: "Login successfull!!",
       token: token,

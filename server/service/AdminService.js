@@ -231,3 +231,32 @@ export const deleteReservation = async (rId) => {
     };
   }
 };
+
+export const getAdminById = async (aId) => {
+  try {
+    const query = `SELECT * FROM admins WHERE aId = ?`;
+    const [admin] = await pool.query(query, [aId]);
+
+    if (admin.length === 0) {
+      return {
+        statCode: 404,
+        success: false,
+        message: "Admin not found!!",
+      };
+    }
+
+    return {
+      statCode: 200,
+      success: true,
+      message: "Admin fetched successfully!!",
+      data: admin[0],
+    };
+  } catch (error) {
+    return {
+      statCode: 500,
+      success: false,
+      message: "Internal server error!!",
+      error: error,
+    };
+  }
+};

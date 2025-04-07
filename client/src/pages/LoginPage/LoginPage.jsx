@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { login } from "../../api/AdminRequest";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const initializeLoginData = {
@@ -9,14 +11,30 @@ function LoginPage() {
   };
 
   const [data, setData] = useState(initializeLoginData);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await login(data);
+      if (response.data.success) {
+        const token = response.data.token;
+        const adminId = response.data.aId;
+        localStorage.setItem("adminId", adminId);
+        localStorage.setItem("authToken", token);
+        navigate(`/dashboard/${response.data?.aId}`);
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      setError(error.response.data.message);
+    }
   };
 
   return (
@@ -28,6 +46,7 @@ function LoginPage() {
             <h2>Login Form</h2>
           </header>
           <div className="login-inputs">
+            {error && <p className="error-message">{error}</p>}{" "}
             <div className="login-name-container">
               <label>User Name</label>
               <input
