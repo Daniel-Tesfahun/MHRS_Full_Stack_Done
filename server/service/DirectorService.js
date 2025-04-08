@@ -44,8 +44,9 @@ export const registerAdmin = async (admin) => {
   }
 };
 
-export const editAdmin = async (admin, aId) => {
+export const editAdmin = async (updatingAdmin, aId) => {
   try {
+    console.log(updatingAdmin);
     // Check if the username exists for update
     const [existingAdmin] = await pool.query(
       `SELECT * FROM admins WHERE aId = ?;`,
@@ -63,7 +64,7 @@ export const editAdmin = async (admin, aId) => {
     // Check for duplicate username
     const [usernameCheck] = await pool.query(
       `SELECT * FROM admins WHERE userName = ? AND aId != ?;`,
-      [admin.userName, aId]
+      [updatingAdmin.userName, aId]
     );
     if (usernameCheck.length > 0) {
       return {
@@ -73,12 +74,18 @@ export const editAdmin = async (admin, aId) => {
       };
     }
 
-    const query = `UPDATE admins SET firstName = ?, lastName = ?, userName = ?, role = ?, updated = NOW() WHERE aId = ?;`;
+    // Hash the password
+    const hashedPassword = updatingAdmin.password
+      ? await bcrypt.hash(updatingAdmin.password, 10)
+      : existingAdmin[0].password; // Keep the current password if not provided
+
+    const query = `UPDATE admins SET firstName = ?, lastName = ?, userName = ?, password = ?, role = ?, updated = NOW() WHERE aId = ?;`;
     const values = [
-      admin.firstName,
-      admin.lastName,
-      admin.userName,
-      admin.role,
+      updatingAdmin.firstName,
+      updatingAdmin.lastName,
+      updatingAdmin.userName,
+      hashedPassword,
+      updatingAdmin.role,
       aId,
     ];
 
@@ -92,7 +99,7 @@ export const editAdmin = async (admin, aId) => {
     return {
       statCode: 500,
       success: false,
-      message: "Internal server error!!",
+      message: "Internal server error from DB!!",
       error: error,
     };
   }

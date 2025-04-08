@@ -4,7 +4,8 @@ class ReservationModel {
     reserverName,
     reserverPhone,
     reserverEmail,
-    timeOfDay,
+    timeFrom,
+    timeTo,
     reservationDate,
     hId,
   }) {
@@ -12,8 +13,9 @@ class ReservationModel {
     this.reserverName = reserverName;
     this.reserverPhone = reserverPhone;
     this.reserverEmail = reserverEmail;
-    this.timeOfDay = timeOfDay;
-    this.reservationDate = reservationDate;
+    (this.timeFrom = timeFrom),
+      (this.timeTo = timeTo),
+      (this.reservationDate = reservationDate);
     this.hId = hId;
   }
 }

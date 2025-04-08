@@ -13,3 +13,9 @@ export const addNewHall = (formData) =>
 
 export const getAllReservations = () =>
   apiClient.get("/api/admin/allReservations");
+
+export const approveReservation = (rId) =>
+  apiClient.post(`/api/admin/approve/${rId}`);
+
+export const rejectReservation = (rId) =>
+  apiClient.put(`/api/admin/reject/${rId}`);

@@ -101,6 +101,37 @@ export const getAllHallDetails = async () => {
   }
 };
 
+export const getSingleHallDetail = async (hId) => {
+  try {
+    const [hallDetail] = await pool.query(
+      "SELECT * FROM hallDetails WHERE hId = ?",
+      [hId]
+    );
+    if (hallDetail.length > 0) {
+      return {
+        success: true,
+        statCode: 200,
+        message: "Hall detail fetched successfully",
+        data: hallDetail[0], // Return the single hall object
+      };
+    } else {
+      return {
+        success: false,
+        statCode: 404,
+        message: "Hall not found",
+        data: null,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      statCode: 500,
+      message: "Internal server error from the DB!!",
+      error: error,
+    };
+  }
+};
+
 export const deleteHallDetails = async (hId) => {
   try {
     // Check if hallId exists

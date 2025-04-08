@@ -15,12 +15,15 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.0.1",
     "@mui/x-date-pickers": "^7.28.2",
+    "@wojtekmaj/react-timerange-picker": "^6.0.0",
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
+    "react-clock": "^5.1.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.1"
+    "react-router-dom": "^7.4.1",
+    "react-time-picker": "^7.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

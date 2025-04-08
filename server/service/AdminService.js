@@ -34,7 +34,7 @@ export const approveReservation = async (rId, approvedBy) => {
         hallDetails.hallName,
         reservations.reserverOffice,
         reservations.reservationDate,
-        reservations.timeOfDay
+        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime 
         FROM 
         reservations
         JOIN 
@@ -45,18 +45,18 @@ export const approveReservation = async (rId, approvedBy) => {
     );
 
     const data = updatedReservation[0];
-    const { hallName, reserverOffice, reservationDate, timeOfDay } = data;
+    const { hallName, reserverOffice, reservationDate, reservationTime } = data;
 
     return {
       success: true,
       statCode: 200,
-      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${timeOfDay} approved successfully.`,
+      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} approved successfully.`,
     };
   } catch (error) {
     return {
       success: false,
       statCode: 500,
-      message: "Internal server error.",
+      message: "Internal server error from API.",
       error: error,
     };
   }
@@ -117,7 +117,7 @@ export const rejectReservation = async (rId, rejectedBy) => {
         hallDetails.hallName,
         reservations.reserverOffice,
         reservations.reservationDate,
-        reservations.timeOfDay
+        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime, 
         FROM
         reservations
         JOIN
@@ -128,12 +128,12 @@ export const rejectReservation = async (rId, rejectedBy) => {
     );
 
     const data = updatedReservation[0];
-    const { hallName, reserverOffice, reservationDate, timeOfDay } = data;
+    const { hallName, reserverOffice, reservationDate, reservationTime } = data;
 
     return {
       success: true,
       statCode: 200,
-      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${timeOfDay} rejected successfully.`,
+      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} rejected successfully.`,
     };
   } catch (error) {
     return {
@@ -147,7 +147,15 @@ export const rejectReservation = async (rId, rejectedBy) => {
 
 export const getAllReservations = async () => {
   try {
-    const [reservations] = await pool.query(`SELECT * FROM reservations`);
+    const [reservations] = await pool.query(`
+      SELECT 
+        reservations.*,
+        hallDetails.hallName
+      FROM 
+        reservations
+      JOIN 
+        hallDetails ON reservations.hId = hallDetails.hId
+    `);
     return {
       success: true,
       statCode: 200,
@@ -174,7 +182,7 @@ export const getAllHallInfo = async () => {
                 reservations.reserverOffice,
                 reservations.rId AS reservationId,
                 reservations.reservationDate,
-                reservations.timeOfDay,
+                CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime, 
                 reservations.reserverEmail
             FROM 
                 reservations

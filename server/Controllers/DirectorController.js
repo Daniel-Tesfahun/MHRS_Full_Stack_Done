@@ -37,20 +37,35 @@ export const register = async (req, res) => {
 
 export const updateAdmin = async (req, res) => {
   const { aId } = req.params;
-  const { firstName, lastName, userName, role } = req.body;
+  const updaterRole = req.admin.role;
+  const updaterId = req.admin.id;
+  const { firstName, lastName, userName, password, role } = req.body;
   if (!firstName || !lastName || !userName || !role) {
     return res
       .status(400)
       .json({ sucess: false, message: "All fields are required!!" });
   }
 
+  const updatingAdmin = new AdminModel({
+    firstName,
+    lastName,
+    userName,
+    password,
+    role,
+  });
+  console.log(req.body);
+  console.log(aId, updaterId);
+  console.log(updatingAdmin);
   try {
-    const response = await editAdmin(
-      { firstName, lastName, userName, role },
-      aId
-    );
-
-    return res.status(response.statCode).json(response);
+    if (updaterRole == "Director" || updaterId == aId) {
+      const response = await editAdmin(updatingAdmin, aId);
+      return res.status(response.statCode).json(response);
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied!!!",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,

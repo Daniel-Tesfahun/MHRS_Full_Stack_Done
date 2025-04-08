@@ -7,7 +7,8 @@ export const bookReservation = async (req, res) => {
     reserverName,
     reserverPhone,
     reserverEmail,
-    timeOfDay,
+    timeFrom,
+    timeTo,
     reservationDate,
     hId,
   } = req.body;
@@ -17,7 +18,8 @@ export const bookReservation = async (req, res) => {
     !reserverName ||
     !reserverPhone ||
     !reserverEmail ||
-    !timeOfDay ||
+    !timeFrom ||
+    !timeTo ||
     !reservationDate ||
     !hId
   ) {
@@ -31,7 +33,8 @@ export const bookReservation = async (req, res) => {
     reserverName,
     reserverPhone,
     reserverEmail,
-    timeOfDay,
+    timeFrom,
+    timeTo,
     reservationDate,
     hId,
   });

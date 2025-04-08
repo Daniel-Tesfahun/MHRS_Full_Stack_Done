@@ -3,6 +3,7 @@ import {
   addHallDetails,
   deleteHallDetails,
   getAllHallDetails,
+  getSingleHallDetail,
   updateHallDetails,
 } from "../service/HallDetailService.js";
 
@@ -73,6 +74,20 @@ export const delete_HallDetails = async (req, res) => {
   try {
     const response = await deleteHallDetails(hId);
     return res.status(response.statCode).json(response);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error from the API!!",
+      error: error,
+    });
+  }
+};
+
+export const get_SingleHallDetail = async (req, res) => {
+  const { hId } = req.params; // Extract hall ID from the request parameters
+  try {
+    const response = await getSingleHallDetail(hId); // Call service function to fetch hall detail
+    return res.status(response.statCode).json(response); // Send response with appropriate status code
   } catch (error) {
     return res.status(500).json({
       success: false,

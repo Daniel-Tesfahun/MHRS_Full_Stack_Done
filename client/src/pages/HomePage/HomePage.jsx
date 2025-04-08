@@ -1,110 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { getAllApprovedReservations } from "../../api/UserRequest";
+import { checkRole } from "../../assets/CheckRole";
 
 function HomePage() {
-  const initializeHallInfo = [
-    {
-      hallName: "Hall A",
-      approvedBy: "Daniel Tesfahun",
-      reserverOffice: "Finance Department",
-      reservationId: 1,
-      reservationDate: "2025-04-04T21:00:00.000Z",
-      timeOfDay: "Morning",
-      reserverEmail: "abel.hailu@example.com",
-    },
-    {
-      hallName: "Hall B",
-      approvedBy: "Daniel Tesfahun",
-      reserverOffice: "Company D",
-      reservationId: 4,
-      reservationDate: "2025-04-07T21:00:00.000Z",
-      timeOfDay: "All Day",
-      reserverEmail: "yohG11@gmail.com",
-    },
-    {
-      hallName: "Hall C",
-      approvedBy: "Abel Hailu",
-      reserverOffice: "Human Resources",
-      reservationId: 5,
-      reservationDate: "2025-04-10T14:00:00.000Z",
-      timeOfDay: "Afternoon",
-      reserverEmail: "hr.manager@example.com",
-    },
-    {
-      hallName: "Hall D",
-      approvedBy: "Eden Wondimu",
-      reserverOffice: "Marketing Team",
-      reservationId: 7,
-      reservationDate: "2025-04-12T09:00:00.000Z",
-      timeOfDay: "Morning",
-      reserverEmail: "marketing.lead@example.com",
-    },
-    {
-      hallName: "Hall E",
-      approvedBy: "Yohannes Gidey",
-      reserverOffice: "Executive Office",
-      reservationId: 9,
-      reservationDate: "2025-04-15T17:00:00.000Z",
-      timeOfDay: "Evening",
-      reserverEmail: "ceo@example.com",
-    },
-    {
-      hallName: "Hall F",
-      approvedBy: "Martha Kebede",
-      reserverOffice: "IT Department",
-      reservationId: 11,
-      reservationDate: "2025-04-18T10:00:00.000Z",
-      timeOfDay: "Morning",
-      reserverEmail: "it.support@example.com",
-    },
-    {
-      hallName: "Hall G",
-      approvedBy: "Martha Kebede",
-      reserverOffice: "Product Team",
-      reservationId: 13,
-      reservationDate: "2025-04-20T08:00:00.000Z",
-      timeOfDay: "Morning",
-      reserverEmail: "product.manager@example.com",
-    },
-    {
-      hallName: "Hall H",
-      approvedBy: "Abel Hailu",
-      reserverOffice: "Customer Service",
-      reservationId: 15,
-      reservationDate: "2025-04-22T15:00:00.000Z",
-      timeOfDay: "Afternoon",
-      reserverEmail: "customer.support@example.com",
-    },
-    {
-      hallName: "Hall I",
-      approvedBy: "Eden Wondimu",
-      reserverOffice: "Legal Department",
-      reservationId: 17,
-      reservationDate: "2025-04-25T13:00:00.000Z",
-      timeOfDay: "Afternoon",
-      reserverEmail: "legal.advisor@example.com",
-    },
-    {
-      hallName: "Hall J",
-      approvedBy: "Yohannes Gidey",
-      reserverOffice: "Accounting",
-      reservationId: 19,
-      reservationDate: "2025-04-28T19:00:00.000Z",
-      timeOfDay: "Evening",
-      reserverEmail: "accounting.head@example.com",
-    },
-  ];
+  const [approvedRes, setApprovedRes] = useState([]);
 
-  const [approvedRes, setApprovedRes] = useState(initializeHallInfo);
-  const sortedHallInfo = initializeHallInfo.sort(
-    (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
-  );
+  useEffect(() => {
+    const fetchApprovedReservations = async () => {
+      try {
+        const response = await getAllApprovedReservations();
+        const unsorted = response.data.data;
+        const sortedReservations = unsorted.sort(
+          (a, b) => new Date(b.created) - new Date(a.created)
+        );
+        console.log(response);
+        setApprovedRes(sortedReservations);
+      } catch (err) {
+        console.error("Failed to fetch admin data:", err);
+      }
+    };
 
-  // for the useEffect hook, we can use the sorted data to set the state
-  // setApprovedRes((prev) =>
-  //   [...prev].sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate))
-  // );
+    fetchApprovedReservations();
+  }, []);
 
   const adminInfo = {
     aId: 1,
@@ -114,6 +33,7 @@ function HomePage() {
     role: "Director",
     updated: "2025-04-04T21:00:00.000Z",
   };
+  const check = checkRole();
 
   return (
     <div className="home-container">
@@ -130,21 +50,19 @@ function HomePage() {
           <table>
             <thead>
               <tr>
-                {(adminInfo?.role === "Admin" ||
-                  adminInfo?.role === "Director") && <th>Reservation Id</th>}
+                {check && <th>Reservation Id</th>}
                 <th>Reserver Office</th>
                 <th>Hall Name</th>
                 <th>Reservation Date</th>
-                <th>Time Of Day</th>
+                <th>Time</th>
                 <th>Reserver Email</th>
                 <th>Approved By</th>
               </tr>
             </thead>
             <tbody>
-              {sortedHallInfo.map((apprRes, index) => (
+              {approvedRes.map((apprRes, index) => (
                 <tr key={index}>
-                  {(adminInfo?.role === "Admin" ||
-                    adminInfo?.role === "Director") && (
+                  {check && (
                     <td data-label="Reservation Id">{apprRes.reservationId}</td>
                   )}
                   <td data-label="Reserver Office">{apprRes.reserverOffice}</td>
@@ -159,7 +77,7 @@ function HomePage() {
                       }
                     )}
                   </td>
-                  <td data-label="Time Of Day">{apprRes.timeOfDay}</td>
+                  <td data-label="Time">{apprRes.reservationTime}</td>
                   <td data-label="Reserver Email">{apprRes.reserverEmail}</td>
                   <td data-label="Approved By">{apprRes.approvedBy}</td>
                 </tr>
