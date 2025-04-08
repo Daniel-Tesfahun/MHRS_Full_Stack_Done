@@ -46,7 +46,6 @@ export const registerAdmin = async (admin) => {
 
 export const editAdmin = async (updatingAdmin, aId) => {
   try {
-    console.log(updatingAdmin);
     // Check if the username exists for update
     const [existingAdmin] = await pool.query(
       `SELECT * FROM admins WHERE aId = ?;`,

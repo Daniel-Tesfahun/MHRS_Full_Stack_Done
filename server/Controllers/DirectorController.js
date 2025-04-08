@@ -53,9 +53,7 @@ export const updateAdmin = async (req, res) => {
     password,
     role,
   });
-  console.log(req.body);
-  console.log(aId, updaterId);
-  console.log(updatingAdmin);
+
   try {
     if (updaterRole == "Director" || updaterId == aId) {
       const response = await editAdmin(updatingAdmin, aId);
