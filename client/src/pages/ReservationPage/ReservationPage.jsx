@@ -9,6 +9,7 @@ import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
 import dayjs from "dayjs";
 import { getAllHallDetails, reserveHall } from "../../api/UserRequest";
+import { toast } from "react-toastify";
 
 function ReservationPage() {
   const defaultHallId = 1; // Default hall ID
@@ -38,7 +39,6 @@ function ReservationPage() {
 
     fetchHall();
   }, []);
-  console.log(allHalls);
 
   const formatTimeTo12Hour = (time24) => {
     let [hours, minutes] = time24.split(":");
@@ -47,7 +47,7 @@ function ReservationPage() {
     return `${hours}:${minutes} ${suffix}`;
   };
 
-  const companies = ["Company A", "Company B", "Company C"];
+  const companies = ["Office A", "Office B", "Office C"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +78,7 @@ function ReservationPage() {
     e.preventDefault();
 
     if (!resTime[0] || !resTime[1]) {
-      alert("Please select a valid time range!");
+      toast.info("Please select a valid time range!");
       return;
     }
     if (
@@ -86,7 +86,7 @@ function ReservationPage() {
         dayjs(`2023-01-01 ${resTime[1]}`)
       )
     ) {
-      alert("The end time cannot be earlier than the start time!");
+      toast.info("The end time cannot be earlier than the start time!");
       return;
     }
     // Format time into 12-hour format
@@ -101,19 +101,20 @@ function ReservationPage() {
       timeTo: formattedTime[1],
     };
 
-    let resMessage = "";
-
     try {
       const response = await reserveHall(formattedData);
-      resMessage = response.data.message;
       if (response.data.success) {
+        toast.success(response.data.message);
         resetForm();
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      resMessage = error.response.data.message;
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
       console.log(error);
     }
-    alert(resMessage);
   };
 
   const resetForm = () => {

@@ -33,7 +33,7 @@ export const approveReservation = async (rId, approvedBy) => {
       `SELECT 
         hallDetails.hallName,
         reservations.reserverOffice,
-        reservations.reservationDate,
+        DATE_FORMAT(reservations.reservationDate, '%M %d, %Y') AS reservationDate,
         CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime 
         FROM 
         reservations
@@ -56,31 +56,11 @@ export const approveReservation = async (rId, approvedBy) => {
     return {
       success: false,
       statCode: 500,
-      message: "Internal server error from API.",
+      message: "Internal server error from DB.",
       error: error,
     };
   }
 };
-
-// Insert into hallInfo table
-// await pool.query(
-//   `INSERT INTO hallInfo (hallName, approvedBy, reservedBy, reservationId, reservationDate, timeOfDay, reserverEmail,created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-//   [
-//     hallName,
-//     approvedBy,
-//     reserverOffice,
-//     rId,
-//     reservationDate,
-//     timeOfDay,
-//     reserverEmail,
-//   ]
-// );
-
-// return {
-//   success: true,
-//   statCode: 200,
-//   message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${timeOfDay} approved successfully.`,
-// };
 
 export const rejectReservation = async (rId, rejectedBy) => {
   try {
@@ -116,8 +96,8 @@ export const rejectReservation = async (rId, rejectedBy) => {
       `SELECT
         hallDetails.hallName,
         reservations.reserverOffice,
-        reservations.reservationDate,
-        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime, 
+        DATE_FORMAT(reservations.reservationDate, '%M %d, %Y') AS reservationDate,
+        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime 
         FROM
         reservations
         JOIN

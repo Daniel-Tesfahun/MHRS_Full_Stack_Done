@@ -3,6 +3,7 @@ import "./LoginPage.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { login } from "../../api/AdminRequest";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function LoginPage() {
   const initializeLoginData = {
@@ -28,12 +29,16 @@ function LoginPage() {
         const adminId = response.data.aId;
         localStorage.setItem("adminId", adminId);
         localStorage.setItem("authToken", token);
+        toast.success(response.data.message);
         navigate(`/dashboard/${response.data?.aId}`);
       } else {
-        setError(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
-      setError(error.response.data.message);
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
+      console.log(error.response.data.message);
     }
   };
 
@@ -46,7 +51,6 @@ function LoginPage() {
             <h2>Login Form</h2>
           </header>
           <div className="login-inputs">
-            {error && <p className="error-message">{error}</p>}{" "}
             <div className="login-name-container">
               <label>User Name</label>
               <input

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./NewAdmin.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { addNewAdmin } from "../../api/DirectorRequest";
+import { toast } from "react-toastify";
 
 function NewAdmin() {
   const initializeLoginData = {
@@ -14,24 +15,26 @@ function NewAdmin() {
 
   const [data, setData] = useState(initializeLoginData);
   const [confirmPassword, setConfirmPassword] = useState("");
-  let msg = "";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (data.password === confirmPassword) {
       try {
         const response = await addNewAdmin(data);
-        msg = response.data.message;
         if (response.data.success) {
+          toast.success(response.data.message);
           setData(initializeLoginData);
           setConfirmPassword("");
+        } else {
+          toast.error(response.data.message);
         }
       } catch (error) {
-        msg = error.response.data.message;
+        toast.error(
+          error.response.data.message || "An unexpected error occurred."
+        );
       }
-      alert(msg);
     } else {
-      alert("Password and Confirm Password do not match!");
+      toast.info("Password and Confirm Password do not match!");
     }
   };
   const handleChange = (e) => {

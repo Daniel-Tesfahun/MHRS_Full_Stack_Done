@@ -32,7 +32,7 @@ export const registerAdmin = async (admin) => {
     return {
       statCode: 201,
       success: true,
-      message: `${admin.role} registered successfully!!`,
+      message: `${admin.firstName} ${admin.lastName} registered successfully!!`,
     };
   } catch (error) {
     return {

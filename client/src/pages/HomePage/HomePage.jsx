@@ -13,9 +13,8 @@ function HomePage() {
         const response = await getAllApprovedReservations();
         const unsorted = response.data.data;
         const sortedReservations = unsorted.sort(
-          (a, b) => new Date(b.created) - new Date(a.created)
+          (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
         );
-        console.log(response);
         setApprovedRes(sortedReservations);
       } catch (err) {
         console.error("Failed to fetch admin data:", err);

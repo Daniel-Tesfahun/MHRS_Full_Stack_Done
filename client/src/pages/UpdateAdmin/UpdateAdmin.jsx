@@ -4,6 +4,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import { getAdminById } from "../../api/AdminRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateAdmin } from "../../api/DirectorRequest";
+import { toast } from "react-toastify";
 
 function UpdateAdmin() {
   const [admin, setAdmin] = useState(null);
@@ -42,7 +43,6 @@ function UpdateAdmin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let resMsg = "";
 
     if (
       data.password == "" &&
@@ -51,23 +51,27 @@ function UpdateAdmin() {
       admin.userName == data.userName &&
       admin.role == data.role
     ) {
-      resMsg = "You did not change anything!!";
+      toast.info("You did not change anything!!");
     } else {
       if (data.password === confirmPassword) {
         try {
           const response = await updateAdmin(aId, data);
-          resMsg = response.data.message;
           if (response.data.success) {
+            toast.success(response.data.message);
             navigate("/displayAdmins");
+          } else {
+            toast.error(response.data.message);
           }
         } catch (error) {
-          resMsg = error.response.data.message;
+          toast.error(
+            error.response.data.message || "An unexpected error occurred."
+          );
+          console.log(error.response.data.message);
         }
       } else {
-        resMsg = "Password and Confirm Password do not match!";
+        toast.info("Password and Confirm Password do not match!");
       }
     }
-    alert(resMsg);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;

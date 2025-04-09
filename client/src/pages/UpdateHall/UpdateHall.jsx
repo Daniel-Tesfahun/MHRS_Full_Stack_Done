@@ -3,6 +3,7 @@ import "./UpdateHall.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { editHall, getHallById } from "../../api/AdminRequest";
+import { toast } from "react-toastify";
 
 function UpdateHall() {
   const [hall, setHall] = useState(null);
@@ -36,28 +37,30 @@ function UpdateHall() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let resMsg = "";
 
     if (
       hall.hallName == data.hallName &&
       hall.capacity == data.capacity &&
       hall.location == data.location
     ) {
-      resMsg = "You did not change anything!!";
+      toast.info("You did not change anything!!");
     } else {
       try {
         const response = await editHall(hId, data);
-        resMsg = response.data.message;
         if (response.data.success) {
+          toast.success(response.data.message);
           navigate("/displayHalls");
           setData(initializeLoginData);
+        } else {
+          toast.success(response.data.message);
         }
       } catch (error) {
-        resMsg = error.response.data.message;
+        toast.error(
+          error.response.data.message || "An unexpected error occurred."
+        );
         console.log(error);
       }
     }
-    alert(resMsg);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;

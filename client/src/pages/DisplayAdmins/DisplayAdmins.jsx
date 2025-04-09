@@ -3,6 +3,7 @@ import "./DisplayAdmins.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { Link } from "react-router-dom";
 import { getAllAdmins, deleteAdmin } from "../../api/DirectorRequest";
+import { toast } from "react-toastify";
 
 const DisplayAdmins = () => {
   const [admins, setAdmins] = useState([]);
@@ -26,7 +27,6 @@ const DisplayAdmins = () => {
   }, [fetchTrigger]);
 
   const handleDelete = async (aId, firstName, lastName) => {
-    let delMsg = "";
     const userConfirmed = window.confirm(
       `Are you sure you want to Delete ${firstName} ${lastName}?`
     );
@@ -35,15 +35,18 @@ const DisplayAdmins = () => {
     }
     try {
       const response = await deleteAdmin(aId);
-      delMsg = response.data.message;
       if (response.data.success) {
+        toast.success(response.data.message);
         setFetchTrigger((prev) => !prev);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      delMsg = error.response.data?.message;
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
       console.log(error);
     }
-    alert(delMsg);
   };
 
   return (

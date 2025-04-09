@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "proxy": "http://localhost:5000",
   "type": "module",
+  "homepage": "mhrs.ethiopbytes.com",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -23,7 +24,8 @@
     "react-clock": "^5.1.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.1",
-    "react-time-picker": "^7.0.0"
+    "react-time-picker": "^7.0.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

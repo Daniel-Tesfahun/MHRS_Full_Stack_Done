@@ -6,6 +6,7 @@ import {
   getAllReservations,
   rejectReservation,
 } from "../../api/AdminRequest";
+import { toast } from "react-toastify";
 
 const ApproveReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -21,7 +22,7 @@ const ApproveReservations = () => {
         );
         setReservations(sortedReservations);
       } catch (err) {
-        console.error("Failed to fetch admin data:", err);
+        console.error("Failed to fetch Reservations data:", err);
       }
     };
 
@@ -29,31 +30,36 @@ const ApproveReservations = () => {
   }, [fetchTrigger]);
 
   const handleApprove = async (rId) => {
-    let approvalMsg = "";
     try {
       const response = await approveReservation(rId);
-      approvalMsg = response.data.message;
       if (response.data.success) {
+        toast.success(response.data.message);
         setFetchTrigger((prev) => !prev);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      approvalMsg = error.response.data.message;
-      console.log(approvalMsg);
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
+      console.log(error.response.data.message);
     }
-    alert(approvalMsg);
   };
   const handleReject = async (rId) => {
-    let approvalMsg = "";
     try {
       const response = await rejectReservation(rId);
-      approvalMsg = response.data.message;
       if (response.data.success) {
+        toast.success(response.data.message);
         setFetchTrigger((prev) => !prev);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      approvalMsg = error.response.data.message;
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
+      console.log(error.response.data.message);
     }
-    alert(approvalMsg);
   };
 
   return (
