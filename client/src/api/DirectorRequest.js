@@ -8,3 +8,5 @@ export const updateAdmin = (aId, formData) =>
 
 export const deleteAdmin = (aId) =>
   apiClient.delete(`/api/director/deleteAdmin/${aId}`);
+
+export const getAllAdmins = () => apiClient.get("api/director/getAllAdmins");

@@ -11,7 +11,6 @@ export const bookReservationService = async (reservationDetails) => {
     reservationDate,
     hId,
   } = reservationDetails;
-  console.log(reservationDetails);
 
   try {
     // Check for time conflicts for the same hall and date
