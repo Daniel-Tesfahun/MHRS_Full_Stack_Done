@@ -20,12 +20,14 @@ function NewHall() {
     try {
       const response = await addNewHall(data);
       resMsg = response.data.message;
+      if (response.data.success) {
+        setData(initializeNewHallData);
+      }
     } catch (error) {
       resMsg = error.response.data.message;
     }
     setMsgState(resMsg);
     alert(resMsg);
-    setData(initializeNewHallData);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -1,32 +1,82 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./UpdateAdmin.css";
 import NavBar from "../../components/NavBar/NavBar";
+import { getAdminById } from "../../api/AdminRequest";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateAdmin } from "../../api/DirectorRequest";
 
 function UpdateAdmin() {
-  const initializeLoginData = {
+  const [admin, setAdmin] = useState(null);
+  const { aId } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState({
     firstName: "",
     lastName: "",
     userName: "",
     password: "",
     role: "",
-  };
+  });
 
-  const [data, setData] = useState(initializeLoginData);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPasswordInputs, setShowPasswordInputs] = useState(false);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const response = await getAdminById(aId);
+        setAdmin(response.data.data);
+        setData({
+          firstName: response.data.data.firstName || "",
+          lastName: response.data.data.lastName || "",
+          userName: response.data.data.userName || "",
+          password: "", // We Keept password empty for security purposes
+          role: response.data.data.role || "",
+        });
+      } catch (err) {
+        console.error("Failed to fetch admin data:", err);
+      }
+    };
+
+    fetchAdminData();
+  }, [aId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (data.password === confirmPassword) {
-      setData(initializeLoginData);
-      setConfirmPassword("");
-      console.log("Form submitted", data);
+    let resMsg = "";
+
+    if (
+      data.password == "" &&
+      admin.firstName == data.firstName &&
+      admin.lastName == data.lastName &&
+      admin.userName == data.userName &&
+      admin.role == data.role
+    ) {
+      resMsg = "You did not change anything!!";
     } else {
-      alert("Password and Confirm Password do not match!");
+      if (data.password === confirmPassword) {
+        try {
+          const response = await updateAdmin(aId, data);
+          resMsg = response.data.message;
+          if (response.data.success) {
+            navigate("/displayAdmins");
+          }
+        } catch (error) {
+          resMsg = error.response.data.message;
+        }
+      } else {
+        resMsg = "Password and Confirm Password do not match!";
+      }
     }
+    alert(resMsg);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const handleTogglePassword = () => {
+    setShowPasswordInputs(!showPasswordInputs);
+    setConfirmPassword("");
+    data.password = "";
   };
 
   const roles = ["Admin", "Director"];
@@ -75,30 +125,41 @@ function UpdateAdmin() {
                 required
               />
             </div>
-            <div className="update-admin-name-container">
-              <label>Password</label>
-              <input
-                type="password"
-                className="update-admin-name-input"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                placeholder="Example: yoh13@123"
-                required
-              />
-            </div>
-            <div className="update-admin-name-container">
-              <label>Password</label>
-              <input
-                type="password"
-                className="update-admin-name-input"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Example: yoh13@123"
-                required
-              />
-            </div>
+            <button
+              className="update-admin-btn show-pass-btn"
+              type="button"
+              onClick={handleTogglePassword}
+            >
+              {showPasswordInputs ? "No Password" : "With Password"}
+            </button>
+            {showPasswordInputs && (
+              <>
+                <div className="update-admin-name-container">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    className="update-admin-name-input"
+                    name="password"
+                    value={showPasswordInputs ? data.password : ""}
+                    onChange={handleChange}
+                    placeholder="Example: yoh13@123"
+                    required
+                  />
+                </div>
+                <div className="update-admin-name-container">
+                  <label>Confirm Password</label>
+                  <input
+                    type="password"
+                    className="update-admin-name-input"
+                    name="confirmPassword"
+                    value={showPasswordInputs ? confirmPassword : ""}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Example: yoh13@123"
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div className="res-company-name-container">
               <label>Select Role:</label>
               <select

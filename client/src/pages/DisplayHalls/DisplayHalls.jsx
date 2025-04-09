@@ -1,57 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DisplayHalls.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { Link } from "react-router-dom";
+import { getAllHallDetails } from "../../api/UserRequest";
+import { deleteHall } from "../../api/AdminRequest";
 
 const DisplayHalls = () => {
-  const initializeHalls = [
-    {
-      hId: 1,
-      hallName: "Hall A",
-      capacity: 100,
-      location: "First Floor",
-    },
-    {
-      hId: 2,
-      hallName: "Hall B",
-      capacity: 150,
-      location: "Second Floor",
-    },
-    {
-      hId: 3,
-      hallName: "Hall C",
-      capacity: 200,
-      location: "Third Floor",
-    },
-    {
-      hId: 4,
-      hallName: "Hall D",
-      capacity: 250,
-      location: "Fourth Floor",
-    },
-    {
-      hId: 5,
-      hallName: "Hall E",
-      capacity: 300,
-      location: "Fifth Floor",
-    },
-    {
-      hId: 6,
-      hallName: "Hall F",
-      capacity: 350,
-      location: "Sixth Floor",
-    },
-  ];
+  const [halls, setHalls] = useState([]);
+  const [fetchTrigger, setFetchTrigger] = useState(false);
 
-  const sortedHall = initializeHalls.sort((a, b) => b.hId - a.hId);
-  const [approvedRes, setApprovedRes] = useState(sortedHall);
+  useEffect(() => {
+    const fetchHallsData = async () => {
+      try {
+        const response = await getAllHallDetails();
+        const unsorted = response.data.data;
+        const sortedReservations = unsorted.sort((a, b) => b.hId - a.hId);
+        setHalls(sortedReservations);
+      } catch (err) {
+        console.error("Failed to fetch admin data:", err);
+      }
+    };
 
-  const handleDelete = (hId) => {
-    const updatedRes = approvedRes.filter((res) => res.hId !== hId);
-    setApprovedRes(updatedRes); // Update state to remove the deleted row
+    fetchHallsData();
+  }, [fetchTrigger]);
+  console.log(halls);
+
+  const handleDelete = async (hId, hallName) => {
+    let delMsg = "";
+    const userConfirmed = window.confirm(
+      `Are you sure you want to Delete ${hallName}?`
+    );
+    if (!userConfirmed) {
+      return; // Exit if the user cancels
+    }
+    try {
+      const response = await deleteHall(hId);
+      delMsg = response.data.message;
+      if (response.data.success) {
+        setFetchTrigger((prev) => !prev);
+      }
+    } catch (error) {
+      delMsg = error.response.data?.message;
+      console.log(error);
+    }
+    alert(delMsg);
   };
-
-  const currentRole = "Director";
 
   return (
     <>
@@ -69,24 +62,21 @@ const DisplayHalls = () => {
             </tr>
           </thead>
           <tbody>
-            {approvedRes.map((apprRes, index) => (
+            {halls.map((hall, index) => (
               <tr key={index}>
-                <td data-label="Hall ID">{apprRes.hId}</td>
-                <td data-label="Hall Name">{apprRes.hallName}</td>
-                <td data-label="Capacity">{apprRes.capacity}</td>
-                <td data-label="Location">{apprRes.location}</td>
+                <td data-label="Hall ID">{hall.hId}</td>
+                <td data-label="Hall Name">{hall.hallName}</td>
+                <td data-label="Capacity">{hall.capacity}</td>
+                <td data-label="Location">{hall.location}</td>
                 <td>
                   {/* Action Buttons */}
                   <div
                     className="delete-button"
-                    onClick={() => handleDelete(apprRes.hId)}
+                    onClick={() => handleDelete(hall.hId, hall.hallName)}
                   >
                     Delete
                   </div>
-                  <Link
-                    to={`/updateHall/${apprRes.hId}`}
-                    className="edit-button"
-                  >
+                  <Link to={`/updateHall/${hall.hId}`} className="edit-button">
                     Edit
                   </Link>
                 </td>

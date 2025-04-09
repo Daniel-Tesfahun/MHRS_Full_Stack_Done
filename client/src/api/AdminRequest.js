@@ -11,6 +11,17 @@ export const getAdminById = (aId) =>
 export const addNewHall = (formData) =>
   apiClient.post("/api/admin/addHallDetails", formData);
 
+export const getAllHalls = () => apiClient.get("api/admin/getAllHalls");
+
+export const getHallById = (hId) =>
+  apiClient.get(`api/admin/getSingleHall/${hId}`);
+
+export const editHall = (hId, formData) =>
+  apiClient.put(`/api/admin/updateHallDetails/${hId}`, formData);
+
+export const deleteHall = (hId) =>
+  apiClient.delete(`/api/admin/deleteHallDetails/${hId}`);
+
 export const getAllReservations = () =>
   apiClient.get("/api/admin/allReservations");
 

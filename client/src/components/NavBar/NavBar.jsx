@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./NavBar.css";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,7 +13,9 @@ function NavBar() {
 
   return (
     <nav className="navbar">
-      <div className="logo">Meeting Hall Reservation</div>
+      <div className="logo">
+        <Link to="/">Meeting Hall Reservation</Link>
+      </div>
       <button
         className={`hamburger ${menuOpen ? "ham-active" : ""}`}
         onClick={toggleMenu}

@@ -22,14 +22,14 @@ function NewAdmin() {
       try {
         const response = await addNewAdmin(data);
         msg = response.data.message;
+        if (response.data.success) {
+          setData(initializeLoginData);
+          setConfirmPassword("");
+        }
       } catch (error) {
         msg = error.response.data.message;
       }
       alert(msg);
-      if (response.data.success) {
-        setData(initializeLoginData);
-        setConfirmPassword("");
-      }
     } else {
       alert("Password and Confirm Password do not match!");
     }

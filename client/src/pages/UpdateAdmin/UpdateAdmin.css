@@ -49,6 +49,16 @@
     background-color: #363f66;
 }
 
+.show-pass-btn {
+    background-color: #aaa;
+    width: fit-content;
+    padding: .5rem 1rem;
+}
+
+.show-pass-btn:hover {
+    background-color: #c8c8c8;
+}
+
 .update-admin-name-container {
     display: flex;
     align-items: center;

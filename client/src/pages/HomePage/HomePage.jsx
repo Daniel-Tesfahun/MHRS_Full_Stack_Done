@@ -25,14 +25,6 @@ function HomePage() {
     fetchApprovedReservations();
   }, []);
 
-  const adminInfo = {
-    aId: 1,
-    firstName: "Daniel",
-    lastName: "Tesfahun",
-    userName: "dan1",
-    role: "Director",
-    updated: "2025-04-04T21:00:00.000Z",
-  };
   const check = checkRole();
 
   return (
