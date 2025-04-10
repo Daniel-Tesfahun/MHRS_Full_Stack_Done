@@ -1,4 +1,5 @@
 import { pool } from "../config/db.js";
+import { sendEmail } from "../utils/NodemailerUtill.js";
 
 export const approveReservation = async (rId, approvedBy) => {
   try {
@@ -14,6 +15,7 @@ export const approveReservation = async (rId, approvedBy) => {
         message: "Reservation is already approved.",
       };
     }
+
     // Update the reservation status to 'Approved'
     const [result] = await pool.query(
       `UPDATE reservations SET approvedStatus = 'Approved', aId = ? WHERE rId = ?`,
@@ -34,23 +36,39 @@ export const approveReservation = async (rId, approvedBy) => {
         hallDetails.hallName,
         reservations.reserverOffice,
         DATE_FORMAT(reservations.reservationDate, '%M %d, %Y') AS reservationDate,
-        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime 
-        FROM 
+        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime,
+        reservations.reserverEmail
+      FROM 
         reservations
-        JOIN 
+      JOIN 
         hallDetails ON reservations.hId = hallDetails.hId
-        WHERE 
+      WHERE 
         reservations.rId = ?;`,
       [rId]
     );
 
     const data = updatedReservation[0];
-    const { hallName, reserverOffice, reservationDate, reservationTime } = data;
+    const {
+      hallName,
+      reserverOffice,
+      reservationDate,
+      reservationTime,
+      reserverEmail,
+    } = data;
+
+    // Send approval email
+    await sendEmail(
+      reserverEmail,
+      "Reservation Approved",
+      `Your reservation for ${hallName} on ${reservationDate} during ${reservationTime} has been successfully approved.
+    To view your reservation details, please visit: [Reservation Details](https://mhrs.ethiopbytes.com).
+    Thank you for using our service!`
+    );
 
     return {
       success: true,
       statCode: 200,
-      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} approved successfully.`,
+      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} approved successfully. Email sent successfully.`,
     };
   } catch (error) {
     return {
@@ -93,27 +111,43 @@ export const rejectReservation = async (rId, rejectedBy) => {
 
     // Fetch the updated reservation details
     const [updatedReservation] = await pool.query(
-      `SELECT
+      `SELECT 
         hallDetails.hallName,
         reservations.reserverOffice,
         DATE_FORMAT(reservations.reservationDate, '%M %d, %Y') AS reservationDate,
-        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime 
-        FROM
+        CONCAT(reservations.timeFrom, ' - ', reservations.timeTo) AS reservationTime,
+        reservations.reserverEmail
+      FROM 
         reservations
-        JOIN
+      JOIN 
         hallDetails ON reservations.hId = hallDetails.hId
-        WHERE
+      WHERE 
         reservations.rId = ?;`,
       [rId]
     );
 
     const data = updatedReservation[0];
-    const { hallName, reserverOffice, reservationDate, reservationTime } = data;
+    const {
+      hallName,
+      reserverOffice,
+      reservationDate,
+      reservationTime,
+      reserverEmail,
+    } = data;
+
+    // Send rejection email
+    await sendEmail(
+      reserverEmail,
+      "Reservation Rejected",
+      `We regret to inform you that your reservation for ${hallName} on ${reservationDate} during ${reservationTime} has been rejected.
+    If you wish to try again or manage your reservations, please visit our website at the following link: [Meeting Hall Reservation System](https://mhrs.ethiopbytes.com).    
+    Thank you for using our service!`
+    );
 
     return {
       success: true,
       statCode: 200,
-      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} rejected successfully.`,
+      message: `Reservation of ${hallName} by ${reserverOffice} for ${reservationDate} ${reservationTime} rejected successfully. Email sent successfully.`,
     };
   } catch (error) {
     return {
