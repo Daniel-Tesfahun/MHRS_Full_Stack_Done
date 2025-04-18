@@ -11,8 +11,9 @@ function LoginPage() {
     password: "",
   };
 
+  localStorage.removeItem("adminId");
+
   const [data, setData] = useState(initializeLoginData);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {

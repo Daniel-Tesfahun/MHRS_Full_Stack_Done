@@ -87,5 +87,15 @@
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
 }
 
+.select-office {
+    margin-left: 0;
+}
+
+@media (max-width: 768px) {
+    .select-office {
+        font-size: 9.5pt;
+        margin-left: .5rem;
+    }
+}
 
 /* For the time range */

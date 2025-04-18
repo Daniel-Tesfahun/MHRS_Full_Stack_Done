@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "./DashBoard.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { getAdminById } from "../../api/AdminRequest";
+import ReservationStatusChart from "../../components/ReservationStatusChart/ReservationStatusChart";
+import ActivityTrendsChart from "../../components/ActiveTrendChart/ActiveTrendChart";
+import HallPerformanceChart from "../../components/HallPerformanceChart/HallPerformanceChart";
 
 function DashBoard() {
   const [admin, setAdmin] = useState(null);
@@ -52,9 +55,9 @@ function DashBoard() {
         </Link>
         <div className="hor-line"></div>
         <ul>
-          <li>
+          {/* <li>
             <Link to="/">Overview</Link>
-          </li>
+          </li> */}
           <li>
             <Link to="/approveReservation">Approve Reservations</Link>
           </li>
@@ -82,9 +85,27 @@ function DashBoard() {
         </ul>
       </nav>
       <div className="dashboard-content">
-        <h2>Dashboard</h2>
-        <p>Welcome to the admin dashboard!</p>
-        <div className="dashboard-detail-contents">
+        <div style={{ padding: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <h2>Dashboard</h2>
+            <p>
+              Welcome to the admins dashboard {admin && admin.data.firstName}{" "}
+              {admin && admin.data.lastName}!
+            </p>
+            {/* <ReservationStatusChart />
+            <ActivityTrendsChart />
+            <HallPerformanceChart /> */}
+          </div>
+        </div>
+        {/* <div className="dashboard-detail-contents">
           <div className="dashboard-detail-content">
             <h3>Overview</h3>
             <p>Here you can manage all aspects of the system.</p>
@@ -97,7 +118,7 @@ function DashBoard() {
             <h3>Add New Admin</h3>
             <p>Add new admins to the system.</p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
