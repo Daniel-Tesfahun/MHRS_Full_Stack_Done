@@ -89,7 +89,10 @@
 
 .select-office {
     margin-left: 0;
+<<<<<<< HEAD
     width: 100%;
+=======
+>>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
 }
 
 @media (max-width: 768px) {
