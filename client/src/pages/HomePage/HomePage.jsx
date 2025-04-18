@@ -3,6 +3,7 @@ import "./HomePage.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { getAllApprovedReservations } from "../../api/UserRequest";
 import { checkRole } from "../../assets/CheckRole";
+import { EthiopianDateUtil } from "mui-ethiopian-datepicker";
 
 function HomePage() {
   const [approvedRes, setApprovedRes] = useState([]);
@@ -25,6 +26,22 @@ function HomePage() {
   }, []);
 
   const check = checkRole();
+
+  const ethiopianMonths = [
+    "መስከረም",
+    "ጥቅምት",
+    "ኅዳር",
+    "ታህሳስ",
+    "ጥር",
+    "የካቲት",
+    "መጋቢት",
+    "ሚያዝያ",
+    "ግንቦት",
+    "ሰኔ",
+    "ሐምሌ",
+    "ነሐሴ",
+    "ጳጉሜን",
+  ];
 
   return (
     <div className="home-container">
@@ -59,14 +76,21 @@ function HomePage() {
                   <td data-label="Reserver Office">{apprRes.reserverOffice}</td>
                   <td data-label="Hall Name">{apprRes.hallName}</td>
                   <td data-label="Reservation Date">
-                    {new Date(apprRes.reservationDate).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+                    {apprRes.reservationDate
+                      ? ethiopianMonths[
+                          EthiopianDateUtil.toEth(
+                            new Date(apprRes.reservationDate)
+                          ).Month - 1
+                        ] +
+                        " " +
+                        EthiopianDateUtil.toEth(
+                          new Date(apprRes.reservationDate)
+                        ).Day +
+                        " " +
+                        EthiopianDateUtil.toEth(
+                          new Date(apprRes.reservationDate)
+                        ).Year
+                      : "N/A"}
                   </td>
                   <td data-label="Time">{apprRes.reservationTime}</td>
                   <td data-label="Reserver Email">{apprRes.reserverEmail}</td>

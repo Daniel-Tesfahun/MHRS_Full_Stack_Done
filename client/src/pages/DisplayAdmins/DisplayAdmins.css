@@ -32,10 +32,6 @@
     color: #374151;
 }
 
-.UsersList th:nth-of-type(8) {
-    border-top-left-radius: 1rem;
-}
-
 .UsersList tbody tr:nth-child(odd) {
     background-color: #f9fafb;
 }

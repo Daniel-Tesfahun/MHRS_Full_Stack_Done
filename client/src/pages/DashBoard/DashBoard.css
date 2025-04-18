@@ -159,6 +159,15 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.dashboard-detail-content p {
+    color: #5f5f62c1;
+}
+
+.dashboard-detail-content h1 {
+    font-size: 27pt;
+    color: #5bdf0ec1;
+}
+
 @media (max-width: 1315px) {
     .dashboard-nav li a {
         font-size: 12pt;

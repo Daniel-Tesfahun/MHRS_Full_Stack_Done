@@ -7,6 +7,7 @@ import {
   rejectReservation,
 } from "../../api/AdminRequest";
 import { toast } from "react-toastify";
+import { EthiopianDateUtil } from "mui-ethiopian-datepicker";
 
 const ApproveReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -62,6 +63,22 @@ const ApproveReservations = () => {
     }
   };
 
+  const ethiopianMonths = [
+    "መስከረም",
+    "ጥቅምት",
+    "ኅዳር",
+    "ታህሳስ",
+    "ጥር",
+    "የካቲት",
+    "መጋቢት",
+    "ሚያዝያ",
+    "ግንቦት",
+    "ሰኔ",
+    "ሐምሌ",
+    "ነሐሴ",
+    "ጳጉሜን",
+  ];
+
   return (
     <>
       <NavBar />
@@ -94,14 +111,21 @@ const ApproveReservations = () => {
                   <td data-label="Time From">{apprRes.timeFrom}</td>
                   <td data-label="Time To">{apprRes.timeTo}</td>
                   <td data-label="Date">
-                    {new Date(apprRes.reservationDate).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+                    {apprRes.reservationDate
+                      ? ethiopianMonths[
+                          EthiopianDateUtil.toEth(
+                            new Date(apprRes.reservationDate)
+                          ).Month - 1
+                        ] +
+                        " " +
+                        EthiopianDateUtil.toEth(
+                          new Date(apprRes.reservationDate)
+                        ).Day +
+                        " " +
+                        EthiopianDateUtil.toEth(
+                          new Date(apprRes.reservationDate)
+                        ).Year
+                      : "N/A"}
                   </td>
                   <td data-label="Approval Status">{apprRes.approvedStatus}</td>
                   <td>

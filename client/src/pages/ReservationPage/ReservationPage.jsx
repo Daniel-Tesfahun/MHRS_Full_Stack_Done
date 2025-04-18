@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./ReservationPage.css";
 import NavBar from "../../components/NavBar/NavBar";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import EtDatePicker from "mui-ethiopian-datepicker";
+import { EtLocalizationProvider } from "mui-ethiopian-datepicker";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
@@ -47,7 +46,39 @@ function ReservationPage() {
     return `${hours}:${minutes} ${suffix}`;
   };
 
-  const companies = ["Office A", "Office B", "Office C"];
+  const companies = [
+    "ዋና ስራ አስፈፃሚ ፅ/ቤት",
+    "ፍትህ ፅ/ቤት",
+    "ሰላምና ፀጥታ ፅ/ቤት",
+    "ደንብ ፅ/ቤት",
+    "ምክር ቤት ፅ/ቤት",
+    "አርሶአደርና ከተማ ግብርና ልማት ፅ/ቤት",
+    "ህብረት ስራ ፅ/ቤት",
+    "ንግድ ፅ/ቤት",
+    "ፋይናንስ ፅ/ቤት",
+    "ፕላንና ልማት ፅ/ቤት",
+    "ፅዳት አስተዳደር ጽ/ቤት",
+    "አካባቢ ጥበቃ ጽ/ቤት",
+    "ከተማ ውበትና አረንጓዴ ልማት ጽ/ቤት",
+    "ስራ አስኪያጅ ጽ/ቤት",
+    "ሲቪል ምዝገባና የነዎሪዎች አገልግሎት ጽ/ቤት",
+    "የፐብሊክ ሰርቪስ የሰው ሀብት ልማት ጽ/ቤት",
+    "ባህልና ቱሪዝም ጽ/ቤት",
+    "ትምህርት ፅ/ቤት",
+    "ሴቶችና ህፃናት ፅ/ቤት",
+    "ጤና ፅ/ቤት",
+    "ኮሙኒኬሽን ፅ/ቤት",
+    "የመንግስት ንብረት አስተዳደር ፅ/ቤት",
+    "ዲዛይንና ግንባታ ስራዎች ጽ/ቤት",
+    "ቤቶች አስተዳደር ልማት ጽ/ቤት",
+    "መስሪያ ቦታዎች ልማት ጽ/ቤት",
+    "ግንባታ ፍቃድና ቁጥጥር ጽ/ቤት",
+    "ኢንዱስትሪ ልማት ጽ/ቤት",
+    "ህብረተሰብ ተሳትፎና በጎፍቃድ ማስተባበሪያ ጽ/ቤት",
+    "ስራና ክህሎት ጽ/ቤት",
+    "ኢኖቬሽን ቴክኖሎጂ ልማት ጽ/ቤት",
+    "ወጣቶችና ስፖርት ጽ/ቤት",
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,21 +89,21 @@ function ReservationPage() {
     }
   };
 
-  const handleDateChange = (newDate) => {
-    const today = dayjs();
-    if (dayjs(newDate).isValid() && dayjs(newDate).isAfter(today, "day")) {
-      setData((prevData) => ({
-        ...prevData,
-        reservationDate: dayjs(newDate).format("YYYY-MM-DD"),
-      }));
-    } else {
-      alert("Please select a valid date that is today or in the future.");
-      setData((prevData) => ({
-        ...prevData,
-        reservationDate: today.format("YYYY-MM-DD"),
-      }));
-    }
-  };
+  // const handleDateChange = (newDate) => {
+  //   const today = new Date();
+  //   if (newDate && newDate > today) {
+  //     setData((prevData) => ({
+  //       ...prevData,
+  //       reservationDate: newDate.toISOString().split("T")[0],
+  //     }));
+  //   } else {
+  //     toast.info("Please select a valid date that is today or in the future.");
+  //     setData((prevData) => ({
+  //       ...prevData,
+  //       reservationDate: today.toISOString().split("T")[0],
+  //     }));
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -141,16 +172,16 @@ function ReservationPage() {
           </header>
           <div className="res-inputs">
             <div className="res-company-name-container">
-              <label>Select an Office:</label>
+              <label>የጠያቂዉ ተቋሙ ስም:</label>
               <select
-                className="res-company-select"
+                className="res-company-select select-office"
                 name="reserverOffice"
                 value={data.reserverOffice}
                 onChange={handleInputChange}
                 required
               >
                 <option value="" disabled>
-                  Select an office
+                  ተቋማት ዝርዝር
                 </option>
                 {companies.map((company, index) => (
                   <option key={index} value={company}>
@@ -160,7 +191,7 @@ function ReservationPage() {
               </select>
             </div>
             <div className="res-name-container">
-              <label>Reserver Name</label>
+              <label>የጠያቂዉ ስም:</label>
               <input
                 type="text"
                 className="res-name-input"
@@ -172,7 +203,7 @@ function ReservationPage() {
               />
             </div>
             <div className="res-name-container">
-              <label>Reserver Phone</label>
+              <label>የጠያቂዉ ስልክ ቁጥር:</label>
               <input
                 type="tel"
                 className="res-name-input"
@@ -184,7 +215,7 @@ function ReservationPage() {
               />
             </div>
             <div className="res-name-container">
-              <label>Reserver Email</label>
+              <label>የጠያቂዉ ኢሜል:</label>
               <input
                 type="email"
                 className="res-name-input"
@@ -196,34 +227,27 @@ function ReservationPage() {
               />
             </div>
             <div className="res-company-name-container">
-              <label>Select Time:</label>
+              <label>ሰዓት:</label>
               <TimeRangePicker onChange={setResTime} value={resTime} required />
             </div>
             <div className="res-date-container">
-              <label>Date:</label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  value={
-                    data.reservationDate
-                      ? dayjs(data.reservationDate, "YYYY-MM-DD")
-                      : null
-                  }
-                  onChange={handleDateChange}
-                  minDate={dayjs()}
-                  format="DD/MM/YYYY"
-                  textField={(params) => (
-                    <input
-                      {...params}
-                      name="reservationDate"
-                      style={{ width: "100%" }}
-                      required
-                    />
-                  )}
+              <label>ቀን:</label>
+              <EtLocalizationProvider localType="AMH">
+                <EtDatePicker
+                  label="ቀን"
+                  value={data.reservationDate}
+                  minDate={new Date()}
+                  onChange={(selectedDate) => {
+                    setData((prevData) => ({
+                      ...prevData,
+                      reservationDate: selectedDate,
+                    }));
+                  }}
                 />
-              </LocalizationProvider>
+              </EtLocalizationProvider>
             </div>
             <div className="res-company-name-container">
-              <label>Select a Hall:</label>
+              <label>አዳራሽ ይምረጡ:</label>
               <select
                 className="res-company-select"
                 name="hId"
@@ -232,7 +256,7 @@ function ReservationPage() {
                 required
               >
                 <option value="" disabled>
-                  Select a Hall
+                  አዳራሾች
                 </option>
                 {allHalls.map((hall) => (
                   <option key={hall.hId} value={hall.hId}>

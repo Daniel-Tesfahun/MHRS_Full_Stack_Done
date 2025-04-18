@@ -144,7 +144,7 @@ body {
     border-top-left-radius: 1rem;
 }
 
-.UsersList th:nth-of-type(7) {
+.UsersList th:last-child {
     border-top-right-radius: 1rem;
 }
 

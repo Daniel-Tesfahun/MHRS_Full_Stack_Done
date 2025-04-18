@@ -101,7 +101,7 @@ function NewAdmin() {
               />
             </div>
             <div className="signup-name-container">
-              <label>Password</label>
+              <label>Confirm Password</label>
               <input
                 type="password"
                 className="signup-name-input"
