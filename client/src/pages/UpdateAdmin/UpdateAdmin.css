@@ -1,0 +1,88 @@
+.update-admin-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f2f3f5;
+}
+
+.update-admin-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    height: 100%;
+}
+
+.update-admin-header {
+    margin-top: 13rem;
+    color: #ff7200df;
+    text-align: center;
+}
+
+.update-admin-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    padding: 1rem 1.5rem;
+    background-color: #f2f3f5;
+    border: 1px solid #23316e;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.update-admin-btn {
+    padding: .6rem 0;
+    border: none;
+    outline: none;
+    border-radius: .3rem;
+    background-color: #ff7200ef;
+    color: #f2f3f5;
+    cursor: pointer;
+    transition: background .3s ease-in-out;
+}
+
+.update-admin-btn:hover {
+    background-color: #363f66;
+}
+
+.show-pass-btn {
+    background-color: #aaa;
+    width: fit-content;
+    padding: .5rem 1rem;
+}
+
+.show-pass-btn:hover {
+    background-color: #c8c8c8;
+}
+
+.update-admin-name-container {
+    display: flex;
+    align-items: center;
+    /* gap: 2rem; */
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.update-admin-name-container>label {
+    font-size: 14pt;
+}
+
+.update-admin-name-input {
+    padding: .5rem 1rem;
+    border: .5px solid #38383aee;
+    background-color: transparent;
+    margin-left: 1rem;
+    color: #38383aee;
+    font-size: 13pt;
+    border-radius: 3px;
+    outline: none;
+}
+
+.update-admin-name-input:hover {
+    border: 1px solid #38383aee;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
+}
