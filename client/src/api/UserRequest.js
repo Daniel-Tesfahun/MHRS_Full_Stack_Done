@@ -1,7 +1,7 @@
 import axios from "axios";
 import apiClient from "./ApiIntercepter";
 
-const API = axios.create({ baseURL: "https://server.mhrs.ethiopbytes.com" });
+const API = axios.create({ baseURL: "http://localhost:5000" });
 
 export const reserveHall = (formData) =>
   API.post("/api/user/reservation", formData);
