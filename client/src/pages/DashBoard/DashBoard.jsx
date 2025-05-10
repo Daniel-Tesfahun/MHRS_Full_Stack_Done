@@ -2,19 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./DashBoard.css";
 import NavBar from "../../components/NavBar/NavBar";
-<<<<<<< HEAD
 import { getAdminById, getAllReservations } from "../../api/AdminRequest";
 import {
   getAllApprovedReservations,
   getAllHallDetails,
 } from "../../api/UserRequest";
 import { getAllAdmins } from "../../api/DirectorRequest";
-=======
-import { getAdminById } from "../../api/AdminRequest";
-import ReservationStatusChart from "../../components/ReservationStatusChart/ReservationStatusChart";
-import ActivityTrendsChart from "../../components/ActiveTrendChart/ActiveTrendChart";
-import HallPerformanceChart from "../../components/HallPerformanceChart/HallPerformanceChart";
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
 
 function DashBoard() {
   const [admin, setAdmin] = useState(null);
@@ -93,15 +86,9 @@ function DashBoard() {
         </Link>
         <div className="hor-line"></div>
         <ul>
-<<<<<<< HEAD
           <li>
             <Link to="">Overview</Link>
           </li>
-=======
-          {/* <li>
-            <Link to="/">Overview</Link>
-          </li> */}
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
           <li>
             <Link to="/approveReservation">Approve Reservations</Link>
           </li>
@@ -144,18 +131,9 @@ function DashBoard() {
               Welcome to the admins dashboard {admin && admin.data.firstName}{" "}
               {admin && admin.data.lastName}!
             </p>
-<<<<<<< HEAD
           </div>
         </div>
         <div className="dashboard-detail-contents">
-=======
-            {/* <ReservationStatusChart />
-            <ActivityTrendsChart />
-            <HallPerformanceChart /> */}
-          </div>
-        </div>
-        {/* <div className="dashboard-detail-contents">
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
           <div className="dashboard-detail-content">
             <h1>{info && info.numOfAllReser}</h1>
             <p>Number of All Reservations</p>
@@ -174,7 +152,7 @@ function DashBoard() {
             <h1>{info && info.numOfHulls}</h1>
             <p>Number of Meeting Hulls</p>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

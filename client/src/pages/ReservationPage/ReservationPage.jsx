@@ -89,7 +89,6 @@ function ReservationPage() {
     }
   };
 
-<<<<<<< HEAD
   // const handleDateChange = (newDate) => {
   //   const today = new Date();
   //   if (newDate && newDate > today) {
@@ -105,23 +104,6 @@ function ReservationPage() {
   //     }));
   //   }
   // };
-=======
-  const handleDateChange = (newDate) => {
-    const today = dayjs();
-    if (dayjs(newDate).isValid() && dayjs(newDate).isAfter(today, "day")) {
-      setData((prevData) => ({
-        ...prevData,
-        reservationDate: dayjs(newDate).format("YYYY-MM-DD"),
-      }));
-    } else {
-      toast.info("Please select a valid date that is today or in the future.");
-      setData((prevData) => ({
-        ...prevData,
-        reservationDate: today.format("YYYY-MM-DD"),
-      }));
-    }
-  };
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -199,11 +181,7 @@ function ReservationPage() {
                 required
               >
                 <option value="" disabled>
-<<<<<<< HEAD
                   ተቋማት ዝርዝር
-=======
-                  ተቋሙ ስም
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
                 </option>
                 {companies.map((company, index) => (
                   <option key={index} value={company}>
@@ -254,7 +232,6 @@ function ReservationPage() {
             </div>
             <div className="res-date-container">
               <label>ቀን:</label>
-<<<<<<< HEAD
               <EtLocalizationProvider localType="AMH">
                 <EtDatePicker
                   label="ቀን"
@@ -266,26 +243,6 @@ function ReservationPage() {
                       reservationDate: selectedDate,
                     }));
                   }}
-=======
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  value={
-                    data.reservationDate
-                      ? dayjs(data.reservationDate, "YYYY-MM-DD")
-                      : null
-                  }
-                  onChange={handleDateChange}
-                  minDate={dayjs()}
-                  format="DD/MM/YYYY"
-                  textField={(params) => (
-                    <input
-                      {...params}
-                      name="reservationDate"
-                      style={{ width: "100%" }}
-                      required
-                    />
-                  )}
->>>>>>> e912b3cd19883edbe3a0e978af406e9e969591e9
                 />
               </EtLocalizationProvider>
             </div>
